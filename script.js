@@ -522,6 +522,15 @@ async function submitForm(e) {
             offer: document.getElementById('offer').value ? document.getElementById('offer').selectedOptions[0].text : '',
             fixedPhone: document.getElementById('fixedPhone').selectedOptions[0].text
         };
+        
+        // Adicionar campos específicos de PF
+        if (formData.contractType === 'pf') {
+            sheetsData.houseSize = data.houseSize || '';
+            sheetsData.cancellationReason = data.cancellationReason || '';
+        }
+        
+        // Debug: verificar dados sendo enviados
+        console.log('Dados enviados para Google Sheets:', sheetsData);
 
         // Get client name for ZIP filename
         const clientName = formData.contractType === 'pf' 
@@ -837,7 +846,7 @@ function limitCepInput(e) {
 // ============================================
 
 // Cole aqui a URL do Google Apps Script após seguir as instruções em INSTRUCOES_GOOGLE_SHEETS.md
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygWNKSdDC3y-nGWoA-D7YgqsjRCy1hUuOb5UcjImEbvqCqaTqzZYfkrdKj1stIxmkW6w/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxdfaJ0r9mk5QCrRdAWrw7uNBxunVRCsgRteuWhov4Ng9guC02OH7QwTdJ8b2-pFzOiaA/exec';
 
 async function sendToGoogleSheets(formData) {
     // Se a URL não foi configurada, não tenta enviar
@@ -913,6 +922,16 @@ async function generatePDF(data) {
         y += lineHeight;
         doc.text(`Telefone 2: ${document.getElementById('phone2').value}`, margin, y);
         y += lineHeight;
+        const houseSize = document.getElementById('houseSize').value;
+        if (houseSize) {
+            doc.text(`Tamanho da Casa: ${houseSize}`, margin, y);
+            y += lineHeight;
+        }
+        const cancellationReason = document.getElementById('cancellationReason').value;
+        if (cancellationReason) {
+            doc.text(`Motivo do Cancelamento: ${cancellationReason}`, margin, y);
+            y += lineHeight;
+        }
     } else {
         doc.text(`Razão Social: ${document.getElementById('companyName').value}`, margin, y);
         y += lineHeight;
