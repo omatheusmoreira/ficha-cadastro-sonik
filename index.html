@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Clientes</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- PDF and ZIP libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <!-- Logo -->
+            <div class="logo-top-container">
+                <img src="assets/cadastrodeclientes.png" alt="Cadastro de Clientes" class="logo-title">
+            </div>
+
+            <!-- Tab Menu Navigation -->
+            <div class="tabs-menu">
+                <button class="tab-button active" data-page="1">
+                    <img src="assets/Tipo de Contrato.svg" alt="Contrato" class="tab-icon">
+                    Contrato
+                </button>
+                <button class="tab-button" data-page="2">
+                    <img src="assets/Informacoes.svg" alt="Informações" class="tab-icon">
+                    Informações
+                </button>
+                <button class="tab-button" data-page="3">
+                    <img src="assets/Enderecos.svg" alt="Endereço" class="tab-icon">
+                    Endereço
+                </button>
+                <button class="tab-button" data-page="4">
+                    <img src="assets/Negociacao.svg" alt="Negociação" class="tab-icon">
+                    Negociação
+                </button>
+                <button class="tab-button" data-page="5">
+                    <img src="assets/Anexos.svg" alt="Anexos" class="tab-icon">
+                    Anexos
+                </button>
+                <button class="tab-button" data-page="6">
+                    <img src="assets/Agendamento.svg" alt="Agendamento" class="tab-icon">
+                    Agendamento
+                </button>
+            </div>
+
+            <!-- Indicador de Páginas -->
+            <div class="page-indicator">
+                <div class="page-progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="page-counter">
+                    <span id="currentPage">1</span> de <span id="totalPages">6</span>
+                </div>
+            </div>
+
+            <form id="multiStepForm">
+                <!-- PAGE 1: TIPO DE CONTRATO -->
+                <div class="form-page active" data-page="1">
+                    <div class="form-group">
+                        <label for="contractType">Tipo de Contrato</label>
+                        <select id="contractType" name="contractType" required>
+                            <option value="pf" selected>Pessoa Física</option>
+                            <option value="pj">Pessoa Jurídica</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="collaborator">Colaborador</label>
+                        <select id="collaborator" name="collaborator" required>
+                            <option value="">Selecione...</option>
+                            <option value="matheus">Matheus Moreira</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- PAGE 2: INFORMAÇÕES -->
+                <div class="form-page" data-page="2">
+                    <div class="form-group">
+                        <label for="access">Acesso</label>
+                        <select id="access" name="access" required>
+                            <option value="">Selecione...</option>
+                            <option value="first">Primeiro</option>
+                            <option value="second">Segundo ou Mais</option>
+                        </select>
+                    </div>
+
+                    <!-- Campos Pessoa Física -->
+                    <div id="pfFields" style="display: none;">
+                        <div class="form-group">
+                            <label for="name">Nome</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone1">WhatsApp</label>
+                                <input type="text" id="phone1" name="phone1" placeholder="(00) 0 0000-0000" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone2">Telefone 2</label>
+                                <input type="text" id="phone2" name="phone2" placeholder="(00) 00000-0000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campos Pessoa Jurídica -->
+                    <div id="pjFields" style="display: none;">
+                        <div class="form-group">
+                            <label for="companyName">Razão Social</label>
+                            <input type="text" id="companyName" name="companyName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cnpj">CNPJ</label>
+                            <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inscriptionState">Inscrição Estadual</label>
+                            <input type="text" id="inscriptionState" name="inscriptionState" placeholder="0000000000000 / isento" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="corporateEmail">E-mail Corporativo</label>
+                            <input type="email" id="corporateEmail" name="corporateEmail" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="businessPhone1">WhatsApp</label>
+                                <input type="text" id="businessPhone1" name="businessPhone1" placeholder="(00) 0 0000-0000" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="businessPhone2">Telefone 2</label>
+                                <input type="text" id="businessPhone2" name="businessPhone2" placeholder="(00) 00000-0000">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAGE 3: ENDEREÇO -->
+                <div class="form-page" data-page="3">
+                    <div class="form-group">
+                        <label for="cep">CEP <span style="color: red;">*</span></label>
+                        <div class="input-with-button">
+                            <input type="text" id="cep" name="cep" placeholder="00000-000" required>
+                            <button type="button" id="searchCep" class="btn-search">Buscar</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="street">Logradouro</label>
+                        <input type="text" id="street" name="street" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="number">Número</label>
+                            <input type="text" id="number" name="number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="complement">Complemento</label>
+                            <input type="text" id="complement" name="complement" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="neighborhood">Bairro</label>
+                        <input type="text" id="neighborhood" name="neighborhood" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">Cidade</label>
+                        <input type="text" id="city" name="city" readonly required>
+                    </div>
+
+                    <div class="btn-center">
+                        <button type="button" id="clearAddress" class="btn btn-secondary">
+                            <img src="assets/clean.svg" alt="Limpar" class="btn-icon">
+                            Limpar Endereço
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PAGE 4: NEGOCIAÇÃO -->
+                <div class="form-page" data-page="4">
+                    <div class="form-group">
+                        <label for="offer">Oferta Desejada</label>
+                        <select id="offer" name="offer" required>
+                            <option value="">Selecione...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dueDate">Data de Vencimento</label>
+                        <select id="dueDate" name="dueDate" required>
+                            <option value="">Selecione...</option>
+                            <option value="05">05</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fixedPhone">Telefonia Fixa</label>
+                        <select id="fixedPhone" name="fixedPhone" required onchange="updatePhoneFileUpload()">
+                            <option value="no" selected>Não</option>
+                            <option value="newNumber">Sim, Número Novo</option>
+                            <option value="portability">Sim, Portabilidade</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="phoneFileGroup" style="display: none;">
+                        <label for="phoneFile">Anexar Conta de Telefone</label>
+                        <input type="file" id="phoneFile" name="phoneFile">
+                    </div>
+                </div>
+
+                <!-- PAGE 5: ANEXOS -->
+                <div class="form-page" data-page="5">
+                    <!-- Campos Pessoa Física -->
+                    <div id="pfAttachments" style="display: none;">
+                        <div class="form-group">
+                            <label for="scoreConsultPf">Consulta de Score (PDF)</label>
+                            <input type="file" id="scoreConsultPf" name="scoreConsultPf" accept=".pdf">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="idDocumentPf">Documento de Identificação (Imagens/PDF)</label>
+                            <input type="file" id="idDocumentPf" name="idDocumentPf" accept="image/*,.pdf" multiple>
+                            <small>Máximo 5 arquivos</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="addressProofPf">Comprovante de Endereço (Imagens/PDF)</label>
+                            <input type="file" id="addressProofPf" name="addressProofPf" accept="image/*,.pdf" multiple>
+                            <small>Máximo 5 arquivos</small>
+                        </div>
+                    </div>
+
+                    <!-- Campos Pessoa Jurídica -->
+                    <div id="pjAttachments" style="display: none;">
+                        <div class="form-group">
+                            <label for="scoreConsultPj">Consulta de Score (PDF)</label>
+                            <input type="file" id="scoreConsultPj" name="scoreConsultPj" accept=".pdf">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cnpjCard">Cartão CNPJ (PDF)</label>
+                            <input type="file" id="cnpjCard" name="cnpjCard" accept=".pdf">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="idDocumentPj">Documento de Identificação (Imagens/PDF)</label>
+                            <input type="file" id="idDocumentPj" name="idDocumentPj" accept="image/*,.pdf" multiple>
+                            <small>Máximo 5 arquivos</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="addressProofPj">Comprovante de Endereço (Imagens/PDF)</label>
+                            <input type="file" id="addressProofPj" name="addressProofPj" accept="image/*,.pdf" multiple>
+                            <small>Máximo 5 arquivos</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="socialContract">Contrato Social (PDF)</label>
+                            <input type="file" id="socialContract" name="socialContract" accept=".pdf">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAGE 6: AGENDAMENTO -->
+                <div class="form-page" data-page="6">
+                    <div class="form-group">
+                        <label for="technicianName">Nome de Quem Receberá o Técnico</label>
+                        <input type="text" id="technicianName" name="technicianName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="technicianPhone">Telefone de Quem Receberá o Técnico</label>
+                        <input type="text" id="technicianPhone" name="technicianPhone" placeholder="(00) 00000-0000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="availability">Disponibilidade</label>
+                        <select id="availability" name="availability" required>
+                            <option value="">Selecione...</option>
+                            <option value="morning">Manhã</option>
+                            <option value="afternoon">Tarde</option>
+                            <option value="saturdays">Somente aos Sábados</option>
+                            <option value="businessHours">Horário Comercial</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="observations">Observações Adicionais</label>
+                        <textarea id="observations" name="observations" rows="5"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additionalFiles">Anexos Adicionais</label>
+                        <input type="file" id="additionalFiles" name="additionalFiles" multiple>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <div class="nav-buttons">
+                        <button type="button" id="prevBtn" class="btn btn-secondary" title="Anterior">
+                            <img src="assets/left.svg" alt="Anterior" class="nav-icon">
+                        </button>
+                        <button type="button" id="nextBtn" class="btn btn-primary" title="Próximo">
+                            <img src="assets/right.svg" alt="Próximo" class="nav-icon">
+                        </button>
+                        <button type="submit" id="submitBtn" class="btn btn-success" style="display: none;" title="Enviar">
+                            <img src="assets/send.svg" alt="Enviar" class="nav-icon">
+                        </button>
+                    </div>
+                    <div class="logo-footer">
+                        <button type="button" id="resetFormBtn" class="btn btn-secondary" title="Limpar Formulário">
+                            <img src="assets/clean.svg" alt="Limpar" class="nav-icon">
+                        </button>
+                        <img src="assets/sonik.png" alt="Sonik Logo" class="logo-bottom">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="loading-modal">
+        <div class="loading-content">
+            <img src="assets/sonik.png" alt="Sonik Logo" class="loading-logo">
+            <div class="loading-spinner"></div>
+            <div class="loading-status">
+                <div class="status-item" id="statusPdf">
+                    <span class="status-icon">⏳</span>
+                    <span class="status-text">Ficha de Cadastro gerada</span>
+                </div>
+                <div class="status-item" id="statusSheets">
+                    <span class="status-icon">⏳</span>
+                    <span class="status-text">Dados enviados para a planilha</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

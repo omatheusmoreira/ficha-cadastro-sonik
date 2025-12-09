@@ -1,0 +1,1099 @@
+// Form Data
+let formData = {
+    contractType: 'pf',
+    page2Data: {},
+    page3Data: {},
+    page4Data: {},
+    page5Data: {},
+    page6Data: {}
+};
+
+// Theme Management
+let currentTheme = {
+    primary: '#018dd7',
+    secondary: '#0175b3',
+    name: 'blue'
+};
+
+const themes = {
+    pf: {
+        primary: '#018dd7',
+        secondary: '#0175b3',
+        name: 'blue',
+        title: 'Pessoa Física'
+    },
+    pj: {
+        primary: '#2E7D32',
+        secondary: '#1B5E20',
+        name: 'green',
+        title: 'Pessoa Jurídica'
+    }
+};
+
+// Planos por tipo de contrato
+const offers = {
+    pf: [
+        '━━━━━ OFERTAS COM 1 ROTEADOR ━━━━━',
+        '800 MEGA - R$89,90',
+        '1 GIGA + DEEZER - R$99,90',
+        '1 GIGA + DEEZER + GLOBOPLAY - R$109,90',
+        '1 GIGA + DEEZER + DISNEY+ - R$119,90',
+        '1 GIGA + DEEZER + HBO MAX - R$119,90',
+        '1 GIGA (ALL IN: GLOBOPLAY + DISNEY+ + HBO MAX) - R$145,90',
+        '1 GIGA + DEEZER + IP FIXO - R$149,90',
+        '',
+        '━━━━━ OFERTAS COM 2 ROTEADORES ━━━━━',
+        '1 GIGA + DEEZER - R$129,90',
+        '1.6 GIGA + DEEZER + DISNEY+ R$139,80',
+        '1.6 GIGA + DEEZER + GLOBOPLAY - R$139,80',
+        '1.6 GIGA + DEEZER + HBO MAX - R$139,80',
+        '1 GIGA (ALL IN + REDE MESH) - R$175,80',
+        '',
+        '━━━━━ OFERTA RURAL ━━━━━',
+        '600 MEGA - R$119,90'
+    ],
+    pj: [
+        '━━━━━ PLANOS BÁSICOS ━━━━━',
+        '600 MEGA + DRIVE 500GB (SEM WI-FI) – R$119,90',
+        '600 MEGA + WI-FI + DRIVE 500GB – R$119,90',
+        '600 MEGA + IP FIXO + DRIVE 500GB – R$149,90',
+        '600 MEGA + WI-FI + IP FIXO + DRIVE 500GB – R$149,90',
+        '600 MEGA + WI-FI + FIXO NACIONAL ILIMITADO + DRIVE 500GB – R$159,90',
+        '',
+        '━━━━━ PLANOS COM TELEFONIA EMPRESARIAL ━━━━━',
+        'FXS 2 CANAIS + 600 MEGA + IP FIXO + WI-FI (MÁX. 2 NÚMEROS) – R$299,90',
+        'NACIONAL 4 CANAIS + 600 MEGA + IP FIXO + WI-FI (MÁX. 4 NÚMEROS) – R$399,90',
+        'SIP 5 CANAIS + 600 MEGA + IP FIXO + WI-FI (MÁX. 5 NÚMEROS) – R$499,90',
+        'SIP 10 CANAIS + 600 MEGA + IP FIXO (MÁX. 50 NÚMEROS) – R$799,90',
+        'SIP 15 CANAIS (MÁX. 50 NÚMEROS) – R$999,90',
+        'SIP 20 CANAIS (MÁX. 50 NÚMEROS) – R$1.199,90',
+        'SIP 30 CANAIS (MÁX. 50 NÚMEROS) – R$1.399,90',
+        '',
+        '━━━━━ TRANSPORTE / LINK DEDICADO ━━━━━',
+        'TRANSPORTE 100 MEGA GPON (POR PONTA) – R$200,00',
+        'TRANSPORTE 100 MEGA ENTRE ONU (AMBOS OS PONTOS JÁ COM INTERNET) – R$160,00',
+        '100 MEGA DEDICADO GPON /30 – R$400,00',
+        '200 MEGA DEDICADO GPON /30 – R$600,00'
+    ]
+};
+
+// Page Management
+let currentPage = 1;
+const totalPages = 6;
+
+// DOM Elements
+const form = document.getElementById('multiStepForm');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const submitBtn = document.getElementById('submitBtn');
+const contractTypeSelect = document.getElementById('contractType');
+const accessSelect = document.getElementById('access');
+const fixedPhoneSelect = document.getElementById('fixedPhone');
+const offerSelect = document.getElementById('offer');
+const cepInput = document.getElementById('cep');
+const searchCepBtn = document.getElementById('searchCep');
+const clearAddressBtn = document.getElementById('clearAddress');
+const availabilitySelect = document.getElementById('availability');
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    initializeEventListeners();
+    initializeTabButtons();
+    updatePageDisplay();
+    // Apply PF theme by default
+    applyTheme('pf');
+    updateOfferOptions();
+    updatePageRequirements();
+});
+
+function initializeEventListeners() {
+    // Navigation buttons
+    prevBtn.addEventListener('click', () => previousPage());
+    nextBtn.addEventListener('click', () => nextPage());
+    submitBtn.addEventListener('click', (e) => submitForm(e));
+
+    // Contract type change
+    contractTypeSelect.addEventListener('change', handleContractTypeChange);
+
+    // Access change
+    accessSelect.addEventListener('change', updatePageRequirements);
+
+    // CEP search
+    searchCepBtn.addEventListener('click', searchAddress);
+    cepInput.addEventListener('blur', searchAddress);
+
+    // Clear address
+    clearAddressBtn.addEventListener('click', clearAddress);
+
+    // Fixed phone change
+    fixedPhoneSelect.addEventListener('change', updatePhoneFileUpload);
+
+    // Availability change
+    availabilitySelect.addEventListener('change', updateAvailabilityOptions);
+
+    // Form submission
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitForm(e);
+    });
+
+    // Email validation
+    document.getElementById('email')?.addEventListener('blur', validateEmail);
+    document.getElementById('corporateEmail')?.addEventListener('blur', validateEmail);
+
+    // Phone number limits (11 digits: (00) 00000-0000)
+    document.getElementById('phone1')?.addEventListener('input', limitPhoneInput);
+    document.getElementById('phone2')?.addEventListener('input', limitPhoneInput);
+    document.getElementById('businessPhone1')?.addEventListener('input', limitPhoneInput);
+    document.getElementById('businessPhone2')?.addEventListener('input', limitPhoneInput);
+    document.getElementById('technicianPhone')?.addEventListener('input', limitPhoneInput);
+
+    // CEP limit (8 digits: 00000-000)
+    cepInput.addEventListener('input', limitCepInput);
+
+    // Inscrição Estadual mask
+    document.getElementById('inscriptionState')?.addEventListener('input', handleInscriptionState);
+
+    // Reset form button
+    document.getElementById('resetFormBtn')?.addEventListener('click', () => {
+        if (confirm('Tem certeza que deseja limpar todo o formulário? Todos os dados serão perdidos.')) {
+            resetForm();
+        }
+    });
+}
+
+// Initialize Tab Buttons
+function initializeTabButtons() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const pageNum = parseInt(button.getAttribute('data-page'));
+            goToPage(pageNum);
+        });
+    });
+}
+
+// Contract Type Change Handler
+function handleContractTypeChange() {
+    formData.contractType = contractTypeSelect.value;
+    updateOfferOptions();
+    updatePageRequirements();
+    
+    // Apply theme based on contract type
+    applyTheme(formData.contractType);
+}
+
+// Apply Theme
+function applyTheme(contractType) {
+    const theme = themes[contractType] || themes.pf;
+    currentTheme = theme;
+    
+    // Update CSS variables for dynamic theming
+    document.documentElement.style.setProperty('--primary-color', theme.primary);
+    document.documentElement.style.setProperty('--secondary-color', theme.secondary);
+    
+    // Update all theme-dependent elements
+    updateThemeElements();
+}
+
+// Update Offer Options
+function updateOfferOptions() {
+    const offers_list = offers[formData.contractType] || [];
+    offerSelect.innerHTML = '<option value="">Selecione...</option>';
+    
+    offers_list.forEach(offer => {
+        const option = document.createElement('option');
+        
+        // Check if it's a separator/header (contains ━)
+        if (offer.includes('━')) {
+            option.value = '';
+            option.textContent = offer;
+            option.disabled = true;
+            option.style.fontWeight = 'bold';
+            option.style.textAlign = 'center';
+        }
+        // Check if it's an empty spacer
+        else if (offer === '') {
+            option.value = '';
+            option.textContent = '';
+            option.disabled = true;
+        }
+        // Regular option
+        else {
+            option.value = offer;
+            option.textContent = offer;
+        }
+        
+        offerSelect.appendChild(option);
+    });
+}
+
+// Update Page Requirements (Show/Hide fields based on contract type)
+function updatePageRequirements() {
+    if (currentPage === 2) {
+        const pfFields = document.getElementById('pfFields');
+        const pjFields = document.getElementById('pjFields');
+        
+        if (formData.contractType === 'pf') {
+            pfFields.style.display = 'block';
+            pjFields.style.display = 'none';
+            // Definir required apenas nos campos PF obrigatórios
+            document.getElementById('name').required = true;
+            document.getElementById('email').required = true;
+            document.getElementById('phone1').required = true;
+            document.getElementById('phone2').required = false;
+            // Remover required dos campos PJ
+            document.querySelectorAll('#pjFields input, #pjFields select').forEach(el => {
+                el.required = false;
+            });
+        } else if (formData.contractType === 'pj') {
+            pfFields.style.display = 'none';
+            pjFields.style.display = 'block';
+            // Definir required apenas nos campos PJ obrigatórios
+            document.getElementById('companyName').required = true;
+            document.getElementById('cnpj').required = true;
+            document.getElementById('inscriptionState').required = true;
+            document.getElementById('corporateEmail').required = true;
+            document.getElementById('businessPhone1').required = true;
+            document.getElementById('businessPhone2').required = false;
+            // Remover required dos campos PF
+            document.querySelectorAll('#pfFields input, #pfFields select').forEach(el => {
+                el.required = false;
+            });
+        }
+    }
+
+    if (currentPage === 5) {
+        const pfAttachments = document.getElementById('pfAttachments');
+        const pjAttachments = document.getElementById('pjAttachments');
+        
+        if (formData.contractType === 'pf') {
+            pfAttachments.style.display = 'block';
+            pjAttachments.style.display = 'none';
+            document.querySelectorAll('#pfAttachments input').forEach(el => {
+                el.required = true;
+            });
+            document.querySelectorAll('#pjAttachments input').forEach(el => {
+                el.required = false;
+            });
+        } else if (formData.contractType === 'pj') {
+            pfAttachments.style.display = 'none';
+            pjAttachments.style.display = 'block';
+            document.querySelectorAll('#pjAttachments input').forEach(el => {
+                el.required = true;
+            });
+            document.querySelectorAll('#pfAttachments input').forEach(el => {
+                el.required = false;
+            });
+        }
+    }
+
+    // Update availability options for PJ
+    if (currentPage === 6 && formData.contractType === 'pj') {
+        const option = document.querySelector('#availability option[value="businessHours"]');
+        if (option) option.style.display = 'block';
+    } else if (currentPage === 6) {
+        const option = document.querySelector('#availability option[value="businessHours"]');
+        if (option) option.style.display = 'none';
+    }
+}
+
+// Update Phone File Upload Visibility
+function updatePhoneFileUpload() {
+    const phoneFileGroup = document.getElementById('phoneFileGroup');
+    if (fixedPhoneSelect.value !== 'no' && fixedPhoneSelect.value !== '') {
+        phoneFileGroup.style.display = 'block';
+    } else {
+        phoneFileGroup.style.display = 'none';
+    }
+}
+
+// Search Address by CEP
+async function searchAddress(e) {
+    if (e.target.id === 'cep' && e.type === 'blur' && !cepInput.value) return;
+    
+    const cep = cepInput.value.replace(/\D/g, '');
+    
+    if (cep.length !== 8) {
+        alert('CEP deve conter 8 dígitos');
+        return;
+    }
+
+    try {
+        // Using ViaCEP API (free Brazilian CEP service)
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+
+        if (data.erro) {
+            alert('CEP não encontrado');
+            return;
+        }
+
+        // Populate address fields
+        document.getElementById('street').value = data.logradouro || '';
+        document.getElementById('neighborhood').value = data.bairro || '';
+        document.getElementById('city').value = data.localidade || '';
+        
+        // Format CEP for display
+        cepInput.value = `${cep.substring(0, 5)}-${cep.substring(5)}`;
+    } catch (error) {
+        console.error('Erro ao buscar CEP:', error);
+        alert('Erro ao buscar CEP. Tente novamente.');
+    }
+}
+
+// Clear Address
+function clearAddress() {
+    document.getElementById('cep').value = '';
+    document.getElementById('street').value = '';
+    document.getElementById('number').value = '';
+    document.getElementById('complement').value = '';
+    document.getElementById('neighborhood').value = '';
+    document.getElementById('city').value = '';
+}
+
+// Update Availability Options
+function updateAvailabilityOptions() {
+    // This is called to enable/disable business hours option based on contract type
+    updatePageRequirements();
+}
+
+// Navigation Functions
+function nextPage() {
+    if (currentPage < totalPages) {
+        currentPage++;
+        updatePageDisplay();
+    }
+}
+
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        updatePageDisplay();
+    }
+}
+
+// Validate Current Page (não bloqueia navegação, apenas indica)
+function validateCurrentPage() {
+    const currentPageElement = document.querySelector(`.form-page[data-page="${currentPage}"]`);
+    const inputs = currentPageElement.querySelectorAll('input[required], select[required], textarea[required]');
+    let isValid = true;
+
+    inputs.forEach(input => {
+        if (input.offsetParent === null) return; // Skip hidden inputs
+        
+        if (!input.value.trim()) {
+            input.style.borderColor = '#e74c3c';
+            isValid = false;
+        } else {
+            input.style.borderColor = '#e0e0e0';
+        }
+    });
+
+    return isValid;
+}
+
+// Validate All Required Fields (bloqueia envio)
+function validateAllRequiredFields() {
+    const allPages = document.querySelectorAll('.form-page');
+    const emptyFields = [];
+    
+    allPages.forEach((page, index) => {
+        const pageNum = index + 1;
+        const inputs = page.querySelectorAll('input[required], select[required], textarea[required]');
+        
+        inputs.forEach(input => {
+            // Verificar se o campo está dentro de um container oculto (pfFields/pjFields)
+            const parentContainer = input.closest('#pfFields, #pjFields, #pfAttachments, #pjAttachments, #phoneFileGroup');
+            
+            // Se está em container oculto, pular
+            if (parentContainer && parentContainer.style.display === 'none') {
+                return;
+            }
+            
+            if (!input.value.trim()) {
+                const label = input.closest('.form-group')?.querySelector('label')?.textContent || input.name || 'Campo sem nome';
+                emptyFields.push({
+                    page: pageNum,
+                    field: label.replace('*', '').trim()
+                });
+                input.style.borderColor = '#e74c3c';
+            } else {
+                input.style.borderColor = '#e0e0e0';
+            }
+        });
+    });
+    
+    if (emptyFields.length > 0) {
+        let message = 'Os seguintes campos obrigatórios não foram preenchidos:\n\n';
+        emptyFields.forEach(item => {
+            message += `• Página ${item.page}: ${item.field}\n`;
+        });
+        alert(message);
+        return false;
+    }
+    
+    return true;
+}
+
+// Update Page Display
+function updatePageDisplay() {
+    // Hide all pages
+    document.querySelectorAll('.form-page').forEach(page => {
+        page.classList.remove('active');
+    });
+
+    // Show current page
+    const currentPageElement = document.querySelector(`.form-page[data-page="${currentPage}"]`);
+    currentPageElement.classList.add('active');
+
+    // Update progress bar
+    const progress = (currentPage / totalPages) * 100;
+    document.getElementById('progressBar').style.width = progress + '%';
+    document.getElementById('currentPage').textContent = currentPage;
+
+    // Update tab buttons
+    document.querySelectorAll('.tab-button').forEach(button => {
+        const pageNum = parseInt(button.getAttribute('data-page'));
+        if (pageNum === currentPage) {
+            button.classList.add('active');
+            // Apply theme colors immediately
+            const gradient = currentTheme.name === 'blue' 
+                ? 'linear-gradient(135deg, #018dd7 0%, #0277bd 100%)'
+                : 'linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%)';
+            button.style.background = gradient;
+            button.style.borderColor = currentTheme.primary;
+            button.style.color = 'white';
+        } else {
+            button.classList.remove('active');
+            button.style.background = '#f5f5f5';
+            button.style.borderColor = '#e0e0e0';
+            button.style.color = '#666';
+        }
+    });
+
+    // Update buttons
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.style.display = currentPage === totalPages ? 'none' : 'block';
+    submitBtn.style.display = currentPage === totalPages ? 'block' : 'none';
+
+    // Update page content based on contract type
+    updatePageRequirements();
+    
+    // Reapply theme styles to ensure buttons are updated
+    updateDynamicStyles();
+
+    // Scroll to top
+    document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Go to specific page
+function goToPage(pageNum) {
+    if (pageNum >= 1 && pageNum <= totalPages) {
+        currentPage = pageNum;
+        updatePageDisplay();
+    }
+}
+
+// Submit Form
+async function submitForm(e) {
+    e.preventDefault();
+
+    // Validate all required fields before submitting
+    if (!validateAllRequiredFields()) {
+        return;
+    }
+
+    try {
+        // Show loading modal
+        showLoadingModal();
+
+        // Collect all form data
+        const formDataObj = new FormData(form);
+        const data = Object.fromEntries(formDataObj);
+
+        // Ajustar dados antes de enviar para Google Sheets
+        const sheetsData = {
+            ...data,
+            contractType: formData.contractType,
+            collaborator: document.getElementById('collaborator').selectedOptions[0].text,
+            access: document.getElementById('access').selectedOptions[0].text,
+            availability: document.getElementById('availability').value ? document.getElementById('availability').selectedOptions[0].text : '',
+            offer: document.getElementById('offer').value ? document.getElementById('offer').selectedOptions[0].text : '',
+            fixedPhone: document.getElementById('fixedPhone').selectedOptions[0].text
+        };
+
+        // Get client name for ZIP filename
+        const clientName = formData.contractType === 'pf' 
+            ? document.getElementById('name').value 
+            : document.getElementById('companyName').value;
+
+        // Generate PDF
+        const pdf = await generatePDF(data);
+        
+        // Create ZIP with PDF and attachments
+        await createZipAndDownload(pdf, clientName);
+        
+        // Mark PDF as completed
+        updateLoadingStatus('statusPdf', true);
+
+        // Send data to Google Sheets
+        const sheetsResult = await sendToGoogleSheets(sheetsData);
+        
+        // Mark Sheets as completed
+        updateLoadingStatus('statusSheets', sheetsResult.status === 'success');
+
+        // Wait 2 seconds to show completion
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Hide loading modal
+        hideLoadingModal();
+
+        // Reset form and go to first page
+        resetForm();
+        
+    } catch (error) {
+        console.error('Erro ao gerar arquivo:', error);
+        hideLoadingModal();
+        alert('Erro ao gerar arquivo. Verifique o console para mais detalhes.');
+    }
+}
+
+// Update Theme Elements
+function updateThemeElements() {
+    // Update progress bar background
+    const progressBar = document.getElementById('progressBar');
+    if (progressBar) {
+        progressBar.style.background = `linear-gradient(90deg, ${currentTheme.primary} 0%, ${currentTheme.secondary} 100%)`;
+    }
+    
+    // Update primary buttons
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+        btn.style.backgroundColor = currentTheme.primary;
+        btn.style.borderColor = currentTheme.primary;
+    });
+    
+    // Update tab buttons
+    document.querySelectorAll('.tab-button.active').forEach(btn => {
+        btn.style.backgroundColor = currentTheme.primary;
+        btn.style.borderColor = currentTheme.primary;
+    });
+    
+    // Update background gradient
+    document.body.style.background = `linear-gradient(135deg, ${currentTheme.primary} 0%, ${currentTheme.secondary} 100%)`;
+    
+    // Update focus states in CSS (we'll use a style tag)
+    updateDynamicStyles();
+}
+
+// Update Dynamic Styles
+function updateDynamicStyles() {
+    let styleId = 'dynamic-theme-styles';
+    let styleTag = document.getElementById(styleId);
+    
+    if (!styleTag) {
+        styleTag = document.createElement('style');
+        styleTag.id = styleId;
+        document.head.appendChild(styleTag);
+    }
+    
+    styleTag.innerHTML = `
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="file"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: ${currentTheme.primary} !important;
+            box-shadow: 0 0 0 3px rgba(${hexToRgb(currentTheme.primary).join(',')}, 0.1) !important;
+        }
+        
+        input[type="text"]:hover,
+        input[type="email"]:hover,
+        input[type="file"]:hover,
+        select:hover,
+        textarea:hover {
+            border-color: ${currentTheme.secondary} !important;
+            background-color: ${currentTheme.name === 'blue' ? '#f9fcfd' : '#f1f8f4'} !important;
+        }
+        
+        .btn-primary:hover {
+            background-color: ${currentTheme.secondary} !important;
+            border-color: ${currentTheme.secondary} !important;
+        }
+        
+        .btn-search {
+            background-color: ${currentTheme.primary} !important;
+        }
+        
+        .btn-search:hover {
+            background-color: ${currentTheme.secondary} !important;
+        }
+        
+        .tab-button:hover:not(.active) {
+            border-color: ${currentTheme.primary} !important;
+            color: ${currentTheme.primary} !important;
+        }
+        
+        .tab-button:hover:not(.active) .tab-icon {
+            filter: brightness(0) saturate(100%) ${currentTheme.name === 'blue' ? 'invert(44%) sepia(99%) saturate(2223%) hue-rotate(185deg) brightness(93%) contrast(101%)' : 'invert(32%) sepia(53%) saturate(1271%) hue-rotate(94deg) brightness(96%) contrast(90%)'} !important;
+            opacity: 1 !important;
+        }
+        
+        input[type="file"]::file-selector-button {
+            background-color: ${currentTheme.primary} !important;
+        }
+        
+        input[type="file"]::file-selector-button:hover {
+            background-color: ${currentTheme.secondary} !important;
+        }
+        
+        .btn-secondary {
+            background-color: ${currentTheme.primary} !important;
+            color: white !important;
+        }
+        
+        .btn-secondary:hover {
+            background-color: ${currentTheme.secondary} !important;
+        }
+        
+        .btn-success:hover {
+            box-shadow: 0 5px 15px rgba(${hexToRgb(currentTheme.primary).join(',')}, 0.3) !important;
+        }
+    `;
+    
+    // Update tab button styles inline
+    document.querySelectorAll('.tab-button').forEach(button => {
+        if (button.classList.contains('active')) {
+            const gradient = currentTheme.name === 'blue' 
+                ? 'linear-gradient(135deg, #018dd7 0%, #0277bd 100%)'
+                : 'linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%)';
+            button.style.background = gradient;
+            button.style.borderColor = currentTheme.primary;
+            button.style.color = 'white';
+        } else {
+            button.style.background = '#f5f5f5';
+            button.style.borderColor = '#e0e0e0';
+            button.style.color = '#666';
+        }
+    });
+    
+    // Update navigation buttons with gradient
+    const gradient = currentTheme.name === 'blue' 
+        ? 'linear-gradient(135deg, #018dd7 0%, #0277bd 100%)'
+        : 'linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%)';
+    
+    document.querySelectorAll('.btn-primary, #nextBtn').forEach(btn => {
+        btn.style.background = gradient;
+        btn.style.borderColor = currentTheme.primary;
+    });
+    
+    // Submit button stays gray with gradient and theme-colored icon
+    document.querySelectorAll('.btn-success, #submitBtn').forEach(btn => {
+        btn.style.background = 'linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)';
+        btn.style.borderColor = '#e0e0e0';
+        btn.style.color = currentTheme.primary;
+        
+        // Apply theme color to the icon
+        const icon = btn.querySelector('.nav-icon');
+        if (icon) {
+            if (currentTheme.name === 'blue') {
+                icon.style.filter = 'brightness(0) saturate(100%) invert(44%) sepia(99%) saturate(2223%) hue-rotate(185deg) brightness(93%) contrast(101%)';
+            } else {
+                icon.style.filter = 'brightness(0) saturate(100%) invert(32%) sepia(53%) saturate(1271%) hue-rotate(94deg) brightness(96%) contrast(90%)';
+            }
+        }
+    });
+    
+    document.querySelectorAll('.btn-secondary, #prevBtn').forEach(btn => {
+        btn.style.background = gradient;
+        btn.style.borderColor = currentTheme.primary;
+    });
+    
+    // Update search buttons
+    document.querySelectorAll('.btn-search').forEach(btn => {
+        btn.style.backgroundColor = currentTheme.primary;
+    });
+}
+
+// Helper function to convert hex to RGB
+function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? [
+        parseInt(result[1], 16),
+        parseInt(result[2], 16),
+        parseInt(result[3], 16)
+    ] : [0, 0, 0];
+}
+
+// Helper function to format phone numbers
+function formatPhone(phone) {
+    const cleaned = phone.replace(/\D/g, '');
+    if (cleaned.length === 11) {
+        return cleaned.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2 $3-$4');
+    }
+    return phone;
+}
+
+// Helper function to format CNPJ
+function formatCNPJ(cnpj) {
+    const cleaned = cnpj.replace(/\D/g, '');
+    if (cleaned.length === 14) {
+        return cleaned.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+    }
+    return cnpj;
+}
+
+// Handle Inscrição Estadual input
+function handleInscriptionState(e) {
+    let value = e.target.value.toUpperCase();
+    
+    // Se começar digitando "ISENTO", permite
+    if (value.startsWith('ISENTO') || 'ISENTO'.startsWith(value)) {
+        e.target.value = value;
+        return;
+    }
+    
+    // Remove tudo que não é número
+    const cleaned = value.replace(/\D/g, '');
+    
+    // Limita a 13 dígitos
+    if (cleaned.length > 0) {
+        e.target.value = cleaned.slice(0, 13);
+    } else {
+        e.target.value = '';
+    }
+}
+
+// Add input formatting
+document.addEventListener('input', (e) => {
+    if (e.target.id === 'phone1' || e.target.id === 'phone2' || 
+        e.target.id === 'businessPhone1' || e.target.id === 'businessPhone2' ||
+        e.target.id === 'technicianPhone') {
+        e.target.value = formatPhone(e.target.value);
+    }
+
+    if (e.target.id === 'cnpj') {
+        e.target.value = formatCNPJ(e.target.value);
+    }
+
+    if (e.target.id === 'cep') {
+        const cleaned = e.target.value.replace(/\D/g, '');
+        if (cleaned.length <= 8) {
+            e.target.value = cleaned.replace(/(\d{5})(\d{3})/, '$1-$2').slice(0, 9);
+        }
+    }
+});
+
+// Email validation function
+function validateEmail(e) {
+    const email = e.target.value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (email && !emailRegex.test(email)) {
+        alert('Por favor, insira um e-mail válido');
+        e.target.value = '';
+        e.target.focus();
+    }
+}
+
+// Limit phone input to 15 characters ((00) 0 0000-0000)
+function limitPhoneInput(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    
+    if (value.length > 11) {
+        value = value.slice(0, 11);
+    }
+    
+    if (value.length >= 11) {
+        e.target.value = value.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2 $3-$4');
+    } else if (value.length > 7) {
+        e.target.value = value.replace(/(\d{2})(\d{1})(\d{4})(\d{0,4})/, '($1) $2 $3-$4');
+    } else if (value.length > 3) {
+        e.target.value = value.replace(/(\d{2})(\d{1})(\d{0,4})/, '($1) $2 $3');
+    } else if (value.length > 2) {
+        e.target.value = value.replace(/(\d{2})(\d{0,1})/, '($1) $2');
+    } else {
+        e.target.value = value;
+    }
+}
+
+// Limit CEP input to 8 digits (00000-000)
+function limitCepInput(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    
+    if (value.length > 8) {
+        value = value.slice(0, 8);
+    }
+    
+    if (value.length > 5) {
+        e.target.value = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+    } else {
+        e.target.value = value;
+    }
+}
+
+// ============================================
+// GOOGLE SHEETS INTEGRATION
+// ============================================
+
+// Cole aqui a URL do Google Apps Script após seguir as instruções em INSTRUCOES_GOOGLE_SHEETS.md
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygWNKSdDC3y-nGWoA-D7YgqsjRCy1hUuOb5UcjImEbvqCqaTqzZYfkrdKj1stIxmkW6w/exec';
+
+async function sendToGoogleSheets(formData) {
+    // Se a URL não foi configurada, não tenta enviar
+    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'COLE_AQUI_A_URL_DO_APPS_SCRIPT') {
+        console.warn('Google Sheets não configurado. Siga as instruções em INSTRUCOES_GOOGLE_SHEETS.md');
+        return { status: 'not_configured' };
+    }
+
+    try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        if (response.ok) {
+            await response.text();
+            return { status: 'success' };
+        } else {
+            console.error('Erro na resposta:', response.status, response.statusText);
+            return { status: 'error', error: response.statusText };
+        }
+    } catch (error) {
+        console.error('Erro ao enviar para Google Sheets:', error);
+        return { status: 'error', error: error.message };
+    }
+}
+
+// Generate PDF with form data
+async function generatePDF(data) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    let y = 20;
+    const lineHeight = 7;
+    const margin = 20;
+    
+    // Title
+    doc.setFontSize(18);
+    doc.setFont(undefined, 'bold');
+    doc.text('FICHA DE CADASTRO', 105, y, { align: 'center' });
+    y += lineHeight * 2;
+    
+    // PAGE 1: TIPO DE CONTRATO
+    doc.setFontSize(14);
+    doc.text('1. TIPO DE CONTRATO', margin, y);
+    y += lineHeight;
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Tipo de Contrato: ${document.getElementById('contractType').selectedOptions[0].text}`, margin, y);
+    y += lineHeight;
+    doc.text(`Colaborador: ${document.getElementById('collaborator').selectedOptions[0].text}`, margin, y);
+    y += lineHeight * 2;
+    
+    // PAGE 2: INFORMAÇÕES
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('2. INFORMAÇÕES', margin, y);
+    y += lineHeight;
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Acesso: ${document.getElementById('access').selectedOptions[0].text}`, margin, y);
+    y += lineHeight;
+    
+    if (formData.contractType === 'pf') {
+        doc.text(`Nome: ${document.getElementById('name').value}`, margin, y);
+        y += lineHeight;
+        doc.text(`E-mail: ${document.getElementById('email').value}`, margin, y);
+        y += lineHeight;
+        doc.text(`Telefone 1: ${document.getElementById('phone1').value}`, margin, y);
+        y += lineHeight;
+        doc.text(`Telefone 2: ${document.getElementById('phone2').value}`, margin, y);
+        y += lineHeight;
+    } else {
+        doc.text(`Razão Social: ${document.getElementById('companyName').value}`, margin, y);
+        y += lineHeight;
+        doc.text(`CNPJ: ${document.getElementById('cnpj').value}`, margin, y);
+        y += lineHeight;
+        doc.text(`Inscrição Estadual: ${document.getElementById('inscriptionState').value}`, margin, y);
+        y += lineHeight;
+        doc.text(`E-mail Corporativo: ${document.getElementById('corporateEmail').value}`, margin, y);
+        y += lineHeight;
+        doc.text(`Telefone Comercial 1: ${document.getElementById('businessPhone1').value}`, margin, y);
+        y += lineHeight;
+        doc.text(`Telefone Comercial 2: ${document.getElementById('businessPhone2').value}`, margin, y);
+        y += lineHeight;
+    }
+    y += lineHeight;
+    
+    // PAGE 3: ENDEREÇO
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('3. ENDEREÇO', margin, y);
+    y += lineHeight;
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text(`CEP: ${document.getElementById('cep').value}`, margin, y);
+    y += lineHeight;
+    doc.text(`Logradouro: ${document.getElementById('street').value}`, margin, y);
+    y += lineHeight;
+    doc.text(`Número: ${document.getElementById('number').value}`, margin, y);
+    y += lineHeight;
+    doc.text(`Complemento: ${document.getElementById('complement').value}`, margin, y);
+    y += lineHeight;
+    doc.text(`Bairro: ${document.getElementById('neighborhood').value}`, margin, y);
+    y += lineHeight;
+    doc.text(`Cidade: ${document.getElementById('city').value}`, margin, y);
+    y += lineHeight * 2;
+    
+    // Check if need new page
+    if (y > 250) {
+        doc.addPage();
+        y = 20;
+    }
+    
+    // PAGE 4: NEGOCIAÇÃO
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('4. NEGOCIAÇÃO', margin, y);
+    y += lineHeight;
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Oferta Desejada: ${document.getElementById('offer').value}`, margin, y);
+    y += lineHeight;
+    doc.text(`Data de Vencimento: ${document.getElementById('dueDate').value}`, margin, y);
+    y += lineHeight;
+    doc.text(`Telefonia Fixa: ${document.getElementById('fixedPhone').selectedOptions[0].text}`, margin, y);
+    y += lineHeight * 2;
+    
+    // PAGE 6: AGENDAMENTO
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('5. AGENDAMENTO', margin, y);
+    y += lineHeight;
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Nome do Responsável: ${document.getElementById('technicianName').value}`, margin, y);
+    y += lineHeight;
+    doc.text(`Telefone: ${document.getElementById('technicianPhone').value}`, margin, y);
+    y += lineHeight;
+    doc.text(`Disponibilidade: ${document.getElementById('availability').selectedOptions[0].text}`, margin, y);
+    y += lineHeight;
+    const obs = document.getElementById('observations').value;
+    if (obs) {
+        doc.text(`Observações: ${obs}`, margin, y);
+    }
+    
+    // Return blob with proper MIME type
+    return new Blob([doc.output('arraybuffer')], { type: 'application/pdf' });
+}
+
+// Create ZIP with PDF and attachments
+async function createZipAndDownload(pdfBlob, clientName) {
+    const zip = new JSZip();
+    
+    // Add PDF to ZIP
+    zip.file('Ficha de Cadastro.pdf', pdfBlob);
+    
+    // Collect all file inputs
+    const fileInputs = [
+        'scoreConsultPf', 'idDocumentPf', 'addressProofPf',
+        'scoreConsultPj', 'cnpjCard', 'idDocumentPj', 'addressProofPj', 'socialContract',
+        'phoneFile', 'additionalFiles'
+    ];
+    
+    // Add uploaded files to ZIP
+    for (const inputId of fileInputs) {
+        const input = document.getElementById(inputId);
+        if (input && input.files && input.files.length > 0) {
+            for (let i = 0; i < input.files.length; i++) {
+                const file = input.files[i];
+                zip.file(file.name, file);
+            }
+        }
+    }
+    
+    // Generate ZIP with minimal compression for maximum compatibility
+    const zipBlob = await zip.generateAsync({ 
+        type: 'blob',
+        compression: 'STORE'
+    });
+    
+    // Sanitize filename - remove special characters
+    const sanitizedName = (clientName || 'Cliente').replace(/[^a-zA-Z0-9\s-]/g, '').trim();
+    
+    // Create and trigger download
+    const url = URL.createObjectURL(zipBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${sanitizedName}.zip`;
+    document.body.appendChild(a);
+    a.click();
+    
+    // Cleanup
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 250);
+}
+
+// Loading Modal Functions
+function showLoadingModal() {
+    const modal = document.getElementById('loadingModal');
+    modal.classList.add('active');
+    
+    // Reset status icons
+    document.getElementById('statusPdf').classList.remove('completed');
+    document.getElementById('statusSheets').classList.remove('completed');
+    document.querySelector('#statusPdf .status-icon').textContent = '⏳';
+    document.querySelector('#statusSheets .status-icon').textContent = '⏳';
+    
+    // Apply theme color to spinner
+    const spinner = document.querySelector('.loading-spinner');
+    if (formData.contractType === 'pj') {
+        spinner.style.borderTopColor = '#2E7D32';
+    } else {
+        spinner.style.borderTopColor = '#018dd7';
+    }
+}
+
+function hideLoadingModal() {
+    const modal = document.getElementById('loadingModal');
+    modal.classList.remove('active');
+}
+
+function updateLoadingStatus(elementId, success) {
+    const element = document.getElementById(elementId);
+    const icon = element.querySelector('.status-icon');
+    
+    if (success) {
+        icon.textContent = '✓';
+        element.classList.add('completed');
+    } else {
+        icon.textContent = '✗';
+    }
+}
+
+function resetForm() {
+    // Reset form fields
+    document.getElementById('multiStepForm').reset();
+    
+    // Remove all red borders from validation
+    document.querySelectorAll('input, select, textarea').forEach(field => {
+        field.style.borderColor = '';
+    });
+    
+    // Go to first page
+    currentPage = 1;
+    
+    // Reset contract type to default (PF)
+    document.getElementById('contractType').value = 'pf';
+    formData.contractType = 'pf';
+    handleContractTypeChange();
+    
+    // Update page display
+    updatePageDisplay();
+}
