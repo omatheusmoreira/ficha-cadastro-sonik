@@ -62,8 +62,9 @@ Siga as instruções detalhadas em `INSTRUCOES_GOOGLE_SHEETS.md` para configurar
 
 ## Autor
 
-Desenvolvido para Sonik Telecom
+Matheus Moreira, operador de BackOffice Sonik Internet®
 
 ## Licença
 
-Todos os direitos reservados © 2024
+Todos os direitos reservados © 2025
+
