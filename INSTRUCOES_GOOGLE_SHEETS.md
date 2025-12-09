@@ -77,6 +77,8 @@ function doPost(e) {
       sheet.getRange(nextRow, 22).setValue(data.technicianPhone || ''); // Coluna V - Tel Técnico
       sheet.getRange(nextRow, 23).setValue(data.availability || ''); // Coluna W - Disponibilidade
       sheet.getRange(nextRow, 24).setValue(data.observations || ''); // Coluna X - Observações
+      sheet.getRange(nextRow, 25).setValue(data.houseSize || ''); // Coluna Y - Tamanho da Casa
+      sheet.getRange(nextRow, 26).setValue(data.cancellationReason || ''); // Coluna Z - Motivo do Cancelamento
     }
     
     return ContentService.createTextOutput(JSON.stringify({
