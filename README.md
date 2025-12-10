@@ -41,7 +41,6 @@ Sistema completo de cadastro de clientes com geração automática de PDF e inte
 ├── index.html              # Estrutura do formulário
 ├── script.js               # Lógica da aplicação
 ├── styles.css              # Estilos e tema
-├── INSTRUCOES_GOOGLE_SHEETS.md  # Configuração do Google Sheets
 ├── assets/                 # Imagens e ícones
 │   ├── *.svg              # Ícones das páginas
 │   ├── *.png              # Logos e backgrounds
@@ -67,4 +66,5 @@ Matheus Moreira, operador de BackOffice Sonik Internet®
 ## Licença
 
 Todos os direitos reservados © 2025
+
 
