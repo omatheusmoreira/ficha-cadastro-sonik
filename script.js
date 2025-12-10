@@ -141,6 +141,19 @@ function initializeEventListeners() {
     // Email validation
     document.getElementById('email')?.addEventListener('blur', validateEmail);
     document.getElementById('corporateEmail')?.addEventListener('blur', validateEmail);
+    
+    // Force lowercase on email fields
+    document.getElementById('email')?.addEventListener('input', forceEmailLowercase);
+    document.getElementById('corporateEmail')?.addEventListener('input', forceEmailLowercase);
+    
+    // Force uppercase on specific fields
+    document.getElementById('name')?.addEventListener('input', forceUppercase);
+    document.getElementById('companyName')?.addEventListener('input', forceUppercase);
+    document.getElementById('street')?.addEventListener('input', forceUppercase);
+    document.getElementById('complement')?.addEventListener('input', forceUppercase);
+    document.getElementById('neighborhood')?.addEventListener('input', forceUppercase);
+    document.getElementById('technicianName')?.addEventListener('input', forceUppercase);
+    document.getElementById('observations')?.addEventListener('input', forceUppercase);
 
     // Phone number limits (11 digits: (00) 00000-0000)
     document.getElementById('phone1')?.addEventListener('input', limitPhoneInput);
@@ -811,6 +824,16 @@ document.addEventListener('input', (e) => {
         }
     }
 });
+
+// Force lowercase on email fields
+function forceEmailLowercase(e) {
+    e.target.value = e.target.value.toLowerCase();
+}
+
+// Force uppercase on specific fields
+function forceUppercase(e) {
+    e.target.value = e.target.value.toUpperCase();
+}
 
 // Email validation function
 function validateEmail(e) {
