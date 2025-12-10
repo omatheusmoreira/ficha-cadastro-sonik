@@ -955,6 +955,11 @@ function initializeDragAndDrop() {
             // Show feedback
             updateFileInputLabel(input);
         }, false);
+        
+        // Handle file selection via click (dialog)
+        input.addEventListener('change', () => {
+            updateFileInputLabel(input);
+        });
     });
 }
 
@@ -991,15 +996,8 @@ function isFileTypeAccepted(file, acceptAttribute) {
 }
 
 function updateFileInputLabel(input) {
-    const fileCount = input.files.length;
-    if (fileCount > 0) {
-        const label = input.previousElementSibling;
-        if (label && label.tagName === 'LABEL') {
-            const originalText = label.textContent.split(' (')[0];
-            label.textContent = `${originalText} (${fileCount} arquivo${fileCount > 1 ? 's' : ''})`;
-            label.style.color = currentTheme.primary;
-        }
-    }
+    // Função mantida para compatibilidade, mas não altera mais o label
+    // O label permanece com seu texto original sempre
 }
 
 // Generate PDF with form data
