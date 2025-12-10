@@ -161,6 +161,8 @@ function initializeEventListeners() {
             resetForm();
         }
     });
+
+
 }
 
 // Initialize Tab Buttons
@@ -387,13 +389,25 @@ function validateCurrentPage() {
     let isValid = true;
 
     inputs.forEach(input => {
-        if (input.offsetParent === null) return; // Skip hidden inputs
+        // Verificar se o campo está dentro de um container oculto
+        const parentContainer = input.closest('#pfFields, #pjFields, #pfAttachments, #pjAttachments, #phoneFileGroup');
+        if (parentContainer) {
+            const displayValue = window.getComputedStyle(parentContainer).display;
+            if (displayValue === 'none') {
+                return; // Skip hidden containers
+            }
+        }
         
-        if (!input.value.trim()) {
-            input.style.borderColor = '#e74c3c';
-            isValid = false;
+        // Verificar se o campo está vazio (funciona para texto, select e file)
+        let isEmpty = false;
+        if (input.type === 'file') {
+            isEmpty = !input.files || input.files.length === 0;
         } else {
-            input.style.borderColor = '#e0e0e0';
+            isEmpty = !input.value || input.value.trim() === '';
+        }
+        
+        if (isEmpty) {
+            isValid = false;
         }
     });
 
@@ -413,20 +427,28 @@ function validateAllRequiredFields() {
             // Verificar se o campo está dentro de um container oculto (pfFields/pjFields)
             const parentContainer = input.closest('#pfFields, #pjFields, #pfAttachments, #pjAttachments, #phoneFileGroup');
             
-            // Se está em container oculto, pular
-            if (parentContainer && parentContainer.style.display === 'none') {
-                return;
+            // Se está em container oculto, pular (usando getComputedStyle para pegar o valor real)
+            if (parentContainer) {
+                const displayValue = window.getComputedStyle(parentContainer).display;
+                if (displayValue === 'none') {
+                    return;
+                }
             }
             
-            if (!input.value.trim()) {
+            // Verificar se o campo está vazio (funciona para texto, select e file)
+            let isEmpty = false;
+            if (input.type === 'file') {
+                isEmpty = !input.files || input.files.length === 0;
+            } else {
+                isEmpty = !input.value || input.value.trim() === '';
+            }
+            
+            if (isEmpty) {
                 const label = input.closest('.form-group')?.querySelector('label')?.textContent || input.name || 'Campo sem nome';
                 emptyFields.push({
                     page: pageNum,
                     field: label.replace('*', '').trim()
                 });
-                input.style.borderColor = '#e74c3c';
-            } else {
-                input.style.borderColor = '#e0e0e0';
             }
         });
     });
@@ -761,23 +783,13 @@ function formatCNPJ(cnpj) {
 
 // Handle Inscrição Estadual input
 function handleInscriptionState(e) {
-    let value = e.target.value.toUpperCase();
+    let value = e.target.value;
     
-    // Se começar digitando "ISENTO", permite
-    if (value.startsWith('ISENTO') || 'ISENTO'.startsWith(value)) {
-        e.target.value = value;
-        return;
-    }
+    // Remove tudo que não é número ou letra
+    const cleaned = value.replace(/[^a-zA-Z0-9]/g, '');
     
-    // Remove tudo que não é número
-    const cleaned = value.replace(/\D/g, '');
-    
-    // Limita a 13 dígitos
-    if (cleaned.length > 0) {
-        e.target.value = cleaned.slice(0, 13);
-    } else {
-        e.target.value = '';
-    }
+    // Limita a 13 caracteres
+    e.target.value = cleaned.slice(0, 13);
 }
 
 // Add input formatting
