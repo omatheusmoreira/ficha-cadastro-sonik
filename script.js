@@ -154,6 +154,8 @@ function initializeEventListeners() {
     document.getElementById('neighborhood')?.addEventListener('input', forceUppercase);
     document.getElementById('technicianName')?.addEventListener('input', forceUppercase);
     document.getElementById('observations')?.addEventListener('input', forceUppercase);
+    document.getElementById('houseSize')?.addEventListener('input', forceUppercase);
+    document.getElementById('cancellationReason')?.addEventListener('input', forceUppercase);
 
     // Phone number limits (11 digits: (00) 00000-0000)
     document.getElementById('phone1')?.addEventListener('input', limitPhoneInput);
