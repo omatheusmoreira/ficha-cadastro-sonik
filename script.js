@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTheme('pf');
     updateOfferOptions();
     updatePageRequirements();
+    initializeDragAndDrop();
 });
 
 function initializeEventListeners() {
@@ -301,10 +302,16 @@ function updatePageRequirements() {
 // Update Phone File Upload Visibility
 function updatePhoneFileUpload() {
     const phoneFileGroup = document.getElementById('phoneFileGroup');
-    if (fixedPhoneSelect.value !== 'no' && fixedPhoneSelect.value !== '') {
+    const phoneFileInput = document.getElementById('phoneFile');
+    
+    // Mostrar o campo de anexo APENAS se for "Sim, Portabilidade"
+    if (fixedPhoneSelect.value === 'portability') {
         phoneFileGroup.style.display = 'block';
+        phoneFileInput.setAttribute('required', 'required');
     } else {
         phoneFileGroup.style.display = 'none';
+        phoneFileInput.removeAttribute('required');
+        phoneFileInput.value = ''; // Limpa o arquivo se mudar a opção
     }
 }
 
@@ -473,7 +480,7 @@ function updatePageDisplay() {
     });
 
     // Update buttons
-    prevBtn.disabled = currentPage === 1;
+    prevBtn.style.display = currentPage === 1 ? 'none' : 'block';
     nextBtn.style.display = currentPage === totalPages ? 'none' : 'block';
     submitBtn.style.display = currentPage === totalPages ? 'block' : 'none';
 
@@ -874,6 +881,124 @@ async function sendToGoogleSheets(formData) {
     } catch (error) {
         console.error('Erro ao enviar para Google Sheets:', error);
         return { status: 'error', error: error.message };
+    }
+}
+
+// Initialize Drag and Drop for all file inputs
+function initializeDragAndDrop() {
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+    
+    fileInputs.forEach(input => {
+        // Add drag and drop styling
+        input.style.position = 'relative';
+        
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            input.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        // Highlight drop zone when item is dragged over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            input.addEventListener(eventName, () => {
+                input.style.backgroundColor = 'rgba(1, 141, 215, 0.08)';
+                input.style.border = '1px dashed ' + currentTheme.primary;
+                input.style.transition = 'all 0.2s ease';
+                input.style.borderRadius = '4px';
+                input.style.padding = '8px';
+            }, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            input.addEventListener(eventName, () => {
+                input.style.backgroundColor = '';
+                input.style.border = '';
+                input.style.borderRadius = '';
+                input.style.padding = '';
+            }, false);
+        });
+        
+        // Handle dropped files
+        input.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            // Get accepted file types from input
+            const acceptedTypes = input.getAttribute('accept');
+            
+            // Create a new FileList-like object
+            const dataTransfer = new DataTransfer();
+            
+            // Add existing files (if any)
+            if (input.files) {
+                Array.from(input.files).forEach(file => dataTransfer.items.add(file));
+            }
+            
+            // Filter and add new files based on accept attribute
+            const invalidFiles = [];
+            Array.from(files).forEach(file => {
+                if (isFileTypeAccepted(file, acceptedTypes)) {
+                    dataTransfer.items.add(file);
+                } else {
+                    invalidFiles.push(file.name);
+                }
+            });
+            
+            // Show error if there are invalid files
+            if (invalidFiles.length > 0) {
+                const acceptMsg = acceptedTypes || 'todos os tipos';
+                alert(`Os seguintes arquivos não são aceitos:\n${invalidFiles.join('\n')}\n\nTipos aceitos: ${acceptMsg}`);
+            }
+            
+            // Update input
+            input.files = dataTransfer.files;
+            
+            // Show feedback
+            updateFileInputLabel(input);
+        }, false);
+    });
+}
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+function isFileTypeAccepted(file, acceptAttribute) {
+    // Se não tem restrição, aceita tudo
+    if (!acceptAttribute || acceptAttribute === '') {
+        return true;
+    }
+    
+    const acceptedTypes = acceptAttribute.split(',').map(type => type.trim());
+    const fileName = file.name.toLowerCase();
+    const fileType = file.type.toLowerCase();
+    
+    return acceptedTypes.some(acceptedType => {
+        // Se for extensão (.pdf, .jpg, etc)
+        if (acceptedType.startsWith('.')) {
+            return fileName.endsWith(acceptedType.toLowerCase());
+        }
+        
+        // Se for MIME type genérico (image/*, video/*, etc)
+        if (acceptedType.endsWith('/*')) {
+            const category = acceptedType.split('/')[0];
+            return fileType.startsWith(category + '/');
+        }
+        
+        // Se for MIME type específico (application/pdf, image/jpeg, etc)
+        return fileType === acceptedType;
+    });
+}
+
+function updateFileInputLabel(input) {
+    const fileCount = input.files.length;
+    if (fileCount > 0) {
+        const label = input.previousElementSibling;
+        if (label && label.tagName === 'LABEL') {
+            const originalText = label.textContent.split(' (')[0];
+            label.textContent = `${originalText} (${fileCount} arquivo${fileCount > 1 ? 's' : ''})`;
+            label.style.color = currentTheme.primary;
+        }
     }
 }
 
