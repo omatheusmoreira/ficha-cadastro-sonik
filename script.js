@@ -1163,7 +1163,11 @@ async function generatePDF(data) {
     y += lineHeight;
     const obs = document.getElementById('observations').value;
     if (obs) {
-        doc.text(`Observações: ${obs}`, margin, y);
+        // Quebra automática de linha para observações
+        const maxWidth = 170; // Largura máxima do texto (210mm - margens)
+        const lines = doc.splitTextToSize(`Observações: ${obs}`, maxWidth);
+        doc.text(lines, margin, y);
+        y += lineHeight * lines.length;
     }
     
     // Return blob with proper MIME type
