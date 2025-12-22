@@ -391,6 +391,15 @@ function updatePageRequirements() {
         }
     }
 
+    // Torna obrigatórios os campos de endereço
+    if (currentPage === 3) {
+        document.getElementById('cep').required = true;
+        document.getElementById('street').required = true;
+        document.getElementById('number').required = true;
+        document.getElementById('neighborhood').required = true;
+        document.getElementById('city').required = true;
+    }
+
     if (currentPage === 5) {
         const pfAttachments = document.getElementById('pfAttachments');
         const pjAttachments = document.getElementById('pjAttachments');
