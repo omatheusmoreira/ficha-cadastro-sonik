@@ -1365,13 +1365,12 @@ function hideLoadingModal() {
 
 function updateLoadingStatus(elementId, success) {
     const element = document.getElementById(elementId);
-    const icon = element.querySelector('.status-icon');
-    
+    if (!element) return;
+    // Não há mais .status-icon, só altera classe se quiser efeito visual
     if (success) {
-        icon.textContent = '✓';
         element.classList.add('completed');
     } else {
-        icon.textContent = '✗';
+        element.classList.remove('completed');
     }
 }
 
