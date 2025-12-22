@@ -740,9 +740,6 @@ async function submitForm(e) {
         // Send data to Google Sheets
         const sheetsResult = await sendToGoogleSheets(sheetsData);
 
-        // Mark Sheets as completed
-        updateLoadingStatus('statusSheets', sheetsResult.status === 'success');
-
         // =============================
         // Upload dos arquivos (incluindo PDF) para o Google Drive
         // =============================
@@ -1342,11 +1339,9 @@ function showLoadingModal() {
     const modal = document.getElementById('loadingModal');
     modal.classList.add('active');
     
-    // Reset status icons
+    // Reset status icon
     document.getElementById('statusPdf').classList.remove('completed');
-    document.getElementById('statusSheets').classList.remove('completed');
     document.querySelector('#statusPdf .status-icon').textContent = '⏳';
-    document.querySelector('#statusSheets .status-icon').textContent = '⏳';
     
     // Apply theme color to spinner
     const spinner = document.querySelector('.loading-spinner');
