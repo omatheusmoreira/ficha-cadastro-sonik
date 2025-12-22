@@ -125,11 +125,12 @@ const offers = {
 const APPS_SCRIPT_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbzsBsCPhbq7OLlaEAt8PG6rxIuHSoNlXTtjlwmhAK7rYJP9Ylit9fbMbGgYnd4kDUk/exec';
 
 /**
- * Envia todos os arquivos do formulário para o Google Drive via Apps Script
+ * Envia todos os arquivos do formulário para o Google Drive via Apps Script, incluindo o PDF da ficha
  * @param {FormData} formData FormData completo do formulário
+ * @param {Blob} pdfBlob Blob do PDF gerado
  * @returns {Promise<string|null>} URL da pasta no Drive ou null em caso de erro
  */
-async function uploadFilesToDrive(formData) {
+async function uploadFilesToDrive(formData, pdfBlob) {
     // Identifica o nome do cliente corretamente
     let contractType = formData.get('contractType');
     let clientName = '';
@@ -141,6 +142,23 @@ async function uploadFilesToDrive(formData) {
     // Prepara arquivos em base64
     let files = [];
     let fileReadPromises = [];
+    // Adiciona o PDF da ficha de cadastro
+    const pdfPromise = new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const base64 = reader.result.split(',')[1];
+            files.push({
+                fileName: 'Ficha de Cadastro.pdf',
+                mimeType: 'application/pdf',
+                base64: base64
+            });
+            resolve();
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(pdfBlob);
+    });
+    fileReadPromises.push(pdfPromise);
+    // Adiciona os demais arquivos do formulário
     for (const [key, value] of formData.entries()) {
         if (value instanceof File && value.size > 0) {
             const promise = new Promise((resolve, reject) => {
@@ -668,41 +686,28 @@ async function submitForm(e) {
         // Debug: verificar dados sendo enviados
         console.log('Dados enviados para Google Sheets:', sheetsData);
 
-        // Get client name for ZIP filename
+        // Get client name for PDF filename
         const clientName = formData.contractType === 'pf' 
             ? document.getElementById('name').value 
             : document.getElementById('companyName').value;
 
         // Generate PDF
         const pdf = await generatePDF(data);
-        
-        // Create ZIP with PDF and attachments
-        await createZipAndDownload(pdf, clientName);
-        
-        // Mark PDF as completed
+
+        // Mark PDF as completed (após gerar)
         updateLoadingStatus('statusPdf', true);
 
         // Send data to Google Sheets
         const sheetsResult = await sendToGoogleSheets(sheetsData);
-        
+
         // Mark Sheets as completed
         updateLoadingStatus('statusSheets', sheetsResult.status === 'success');
 
-        // Log detalhado do FormData enviado para o Drive (debug)
-        console.log('FormData enviado para o Drive:');
-        for (let pair of formDataObj.entries()) {
-            if (pair[1] instanceof File) {
-                console.log(pair[0] + ': [Arquivo] ' + pair[1].name);
-            } else {
-                console.log(pair[0] + ': ' + pair[1]);
-            }
-        }
-
         // =============================
-        // Upload dos arquivos para o Google Drive (não bloqueia o fluxo)
+        // Upload dos arquivos (incluindo PDF) para o Google Drive
         // =============================
         try {
-            const folderUrl = await uploadFilesToDrive(formDataObj);
+            const folderUrl = await uploadFilesToDrive(formDataObj, pdf);
             if (folderUrl) {
                 console.log('Arquivos enviados para o Drive com sucesso:', folderUrl);
             } else {
@@ -1290,54 +1295,7 @@ async function generatePDF(data) {
     return new Blob([doc.output('arraybuffer')], { type: 'application/pdf' });
 }
 
-// Create ZIP with PDF and attachments
-async function createZipAndDownload(pdfBlob, clientName) {
-    const zip = new JSZip();
-    
-    // Add PDF to ZIP
-    zip.file('Ficha de Cadastro.pdf', pdfBlob);
-    
-    // Collect all file inputs
-    const fileInputs = [
-        'scoreConsultPf', 'idDocumentPf', 'addressProofPf',
-        'scoreConsultPj', 'cnpjCard', 'idDocumentPj', 'addressProofPj', 'socialContract',
-        'phoneFile', 'additionalFiles'
-    ];
-    
-    // Add uploaded files to ZIP
-    for (const inputId of fileInputs) {
-        const input = document.getElementById(inputId);
-        if (input && input.files && input.files.length > 0) {
-            for (let i = 0; i < input.files.length; i++) {
-                const file = input.files[i];
-                zip.file(file.name, file);
-            }
-        }
-    }
-    
-    // Generate ZIP with minimal compression for maximum compatibility
-    const zipBlob = await zip.generateAsync({ 
-        type: 'blob',
-        compression: 'STORE'
-    });
-    
-    // Sanitize filename - remove special characters
-    const sanitizedName = (clientName || 'Cliente').replace(/[^a-zA-Z0-9\s-]/g, '').trim();
-    
-    // Create and trigger download
-    const url = URL.createObjectURL(zipBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${sanitizedName}.zip`;
-    document.body.appendChild(a);
-    a.click();
-    
-    // Cleanup
-    setTimeout(() => {
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }, 250);
-}
+// (Removido: função de download do ZIP não é mais necessária)
 
 // Loading Modal Functions
 function showLoadingModal() {
