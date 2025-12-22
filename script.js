@@ -754,7 +754,11 @@ async function submitForm(e) {
             console.error('Erro ao tentar enviar arquivos para o Drive:', err);
         }
 
-        // Wait 2 seconds to show completion
+        // Altera mensagem para sucesso
+        const statusText = document.querySelector('#statusPdf .status-text');
+        if (statusText) statusText.textContent = 'Enviado com sucesso ✅';
+
+        // Espera 2 segundos para o usuário ver a mensagem de sucesso
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         // Hide loading modal
@@ -1341,7 +1345,9 @@ function showLoadingModal() {
     
     // Reset status icon
     document.getElementById('statusPdf').classList.remove('completed');
-    document.querySelector('#statusPdf .status-icon').textContent = '⏳';
+    // Garante que a mensagem volte para o padrão ao abrir
+    const statusText = document.querySelector('#statusPdf .status-text');
+    if (statusText) statusText.textContent = 'Enviando dados...';
     
     // Apply theme color to spinner
     const spinner = document.querySelector('.loading-spinner');
