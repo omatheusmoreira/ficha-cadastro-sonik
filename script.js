@@ -1,3 +1,43 @@
+// Detecta ambiente local ou produção
+const isLocal = location.hostname === "localhost" || location.protocol === "file:";
+
+/**
+ * Função central para upload de arquivos (Drive)
+ * @param {object} payload - Objeto com clientName, contractType, files[]
+ */
+async function uploadFiles(payload) {
+    if (isLocal) {
+        // Modo simulação local
+        console.log("🧪 MODO LOCAL");
+        console.log("Cliente:", payload.clientName);
+        console.log("Arquivos:", payload.files.map(f => f.fileName));
+        return {
+            status: "success",
+            folderUrl: "LOCAL_SIMULATION"
+        };
+    } else {
+        // Modo produção (GitHub Pages)
+        console.log("🌐 MODO PRODUÇÃO (upload real)");
+        try {
+            const response = await fetch(APPS_SCRIPT_UPLOAD_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            if (result.status === "success") {
+                console.log("Arquivos enviados para o Drive com sucesso:", result.folderUrl);
+                return result;
+            } else {
+                console.error("Erro ao enviar arquivos para o Drive:", result.message);
+                return result;
+            }
+        } catch (error) {
+            console.error("Erro na integração com o Google Drive:", error);
+            return { status: "error", message: error.toString() };
+        }
+    }
+}
 // Form Data
 let formData = {
     contractType: 'pf',
@@ -78,6 +118,58 @@ const offers = {
 };
 
 // Page Management
+// =============================
+// Função para upload de arquivos no Google Drive via Apps Script
+// =============================
+// Cole a URL do seu Apps Script Web App abaixo:
+const APPS_SCRIPT_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbzsBsCPhbq7OLlaEAt8PG6rxIuHSoNlXTtjlwmhAK7rYJP9Ylit9fbMbGgYnd4kDUk/exec';
+
+/**
+ * Envia todos os arquivos do formulário para o Google Drive via Apps Script
+ * @param {FormData} formData FormData completo do formulário
+ * @returns {Promise<string|null>} URL da pasta no Drive ou null em caso de erro
+ */
+async function uploadFilesToDrive(formData) {
+    // Identifica o nome do cliente corretamente
+    let contractType = formData.get('contractType');
+    let clientName = '';
+    if (contractType === 'pf') {
+        clientName = formData.get('name') || '';
+    } else if (contractType === 'pj') {
+        clientName = formData.get('companyName') || '';
+    }
+    // Prepara arquivos em base64
+    let files = [];
+    let fileReadPromises = [];
+    for (const [key, value] of formData.entries()) {
+        if (value instanceof File && value.size > 0) {
+            const promise = new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64 = reader.result.split(',')[1];
+                    files.push({
+                        fileName: value.name,
+                        mimeType: value.type,
+                        base64: base64
+                    });
+                    resolve();
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(value);
+            });
+            fileReadPromises.push(promise);
+        }
+    }
+    await Promise.all(fileReadPromises);
+    // Monta o payload
+    const payload = {
+        clientName: clientName,
+        contractType: contractType,
+        files: files
+    };
+    // Chama função central de upload
+    return await uploadFiles(payload);
+}
 let currentPage = 1;
 const totalPages = 6;
 
@@ -595,6 +687,30 @@ async function submitForm(e) {
         
         // Mark Sheets as completed
         updateLoadingStatus('statusSheets', sheetsResult.status === 'success');
+
+        // Log detalhado do FormData enviado para o Drive (debug)
+        console.log('FormData enviado para o Drive:');
+        for (let pair of formDataObj.entries()) {
+            if (pair[1] instanceof File) {
+                console.log(pair[0] + ': [Arquivo] ' + pair[1].name);
+            } else {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+        }
+
+        // =============================
+        // Upload dos arquivos para o Google Drive (não bloqueia o fluxo)
+        // =============================
+        try {
+            const folderUrl = await uploadFilesToDrive(formDataObj);
+            if (folderUrl) {
+                console.log('Arquivos enviados para o Drive com sucesso:', folderUrl);
+            } else {
+                console.warn('Falha ao enviar arquivos para o Drive. Veja o log acima.');
+            }
+        } catch (err) {
+            console.error('Erro ao tentar enviar arquivos para o Drive:', err);
+        }
 
         // Wait 2 seconds to show completion
         await new Promise(resolve => setTimeout(resolve, 2000));
