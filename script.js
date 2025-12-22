@@ -396,6 +396,7 @@ function updatePageRequirements() {
         document.getElementById('cep').required = true;
         document.getElementById('street').required = true;
         document.getElementById('number').required = true;
+        document.getElementById('complement').required = true;
         document.getElementById('neighborhood').required = true;
         document.getElementById('city').required = true;
     }
