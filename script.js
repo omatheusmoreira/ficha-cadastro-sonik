@@ -399,6 +399,36 @@ function updatePageRequirements() {
         document.getElementById('complement').required = true;
         document.getElementById('neighborhood').required = true;
         document.getElementById('city').required = true;
+
+        // Exibe o campo 'Tamanho da Casa do Cliente' apenas para PF
+        const houseSizeGroup = document.getElementById('houseSizeGroup');
+        if (formData.contractType === 'pf') {
+            houseSizeGroup.style.display = 'block';
+            document.getElementById('houseSize').required = true;
+        } else {
+            houseSizeGroup.style.display = 'none';
+            document.getElementById('houseSize').required = false;
+        }
+    } else {
+        // Garante que o campo fique oculto nas outras páginas
+        const houseSizeGroup = document.getElementById('houseSizeGroup');
+        if (houseSizeGroup) houseSizeGroup.style.display = 'none';
+    }
+
+    if (currentPage === 4) {
+        // Exibe o campo 'Motivo do Cancelamento com o Provedor Anterior' apenas para PF
+        const cancellationReasonGroup = document.getElementById('cancellationReasonGroup');
+        if (formData.contractType === 'pf') {
+            cancellationReasonGroup.style.display = 'block';
+            document.getElementById('cancellationReason').required = true;
+        } else {
+            cancellationReasonGroup.style.display = 'none';
+            document.getElementById('cancellationReason').required = false;
+        }
+    } else {
+        // Garante que o campo fique oculto nas outras páginas
+        const cancellationReasonGroup = document.getElementById('cancellationReasonGroup');
+        if (cancellationReasonGroup) cancellationReasonGroup.style.display = 'none';
     }
 
     if (currentPage === 5) {
