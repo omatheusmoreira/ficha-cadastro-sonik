@@ -81,6 +81,7 @@ const offers = {
         '1 GIGA + DEEZER + HBO MAX - R$119,90',
         '1 GIGA (ALL IN: GLOBOPLAY + DISNEY+ + HBO MAX) - R$145,90',
         '1 GIGA + DEEZER + IP FIXO - R$149,90',
+        '2 GIGA (ALL IN: GLOBOPLAY + DISNEY+ + HBO MAX) - R$149,90',
         '',
         '━━━━━ OFERTAS COM 2 ROTEADORES ━━━━━',
         '1 GIGA + DEEZER - R$129,90',
@@ -1395,4 +1396,5 @@ function resetForm() {
     // Update page display
     updatePageDisplay();
 }
+
 
