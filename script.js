@@ -99,6 +99,7 @@ const offers = {
         '600 MEGA + IP FIXO + DRIVE 500GB – R$149,90',
         '600 MEGA + WI-FI + IP FIXO + DRIVE 500GB – R$149,90',
         '600 MEGA + WI-FI + FIXO NACIONAL ILIMITADO + DRIVE 500GB – R$159,90',
+        '1 GIGA + WI-FI + IP FIXO – R$269,80',
         '',
         '━━━━━ PLANOS COM TELEFONIA EMPRESARIAL ━━━━━',
         'FXS 2 CANAIS + 600 MEGA + IP FIXO + WI-FI (MÁX. 2 NÚMEROS) – R$299,90',
@@ -1394,3 +1395,4 @@ function resetForm() {
     // Update page display
     updatePageDisplay();
 }
+
