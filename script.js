@@ -680,7 +680,7 @@ function updatePageDisplay() {
     updateDynamicStyles();
 
     // Scroll to top
-    document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
 // Go to specific page
@@ -1396,6 +1396,7 @@ function resetForm() {
     // Update page display
     updatePageDisplay();
 }
+
 
 
 
