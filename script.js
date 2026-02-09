@@ -1251,11 +1251,11 @@ async function generatePDF(data) {
             doc.text(`Tamanho da Casa: ${houseSize}`, margin, y);
             y += lineHeight;
         }
-        const cancellationReason = document.getElementById('cancellationReason').value;
-        if (cancellationReason) {
-            doc.text(`Motivo do Cancelamento: ${cancellationReason}`, margin, y);
-            y += lineHeight;
-        }
+        // const cancellationReason = document.getElementById('cancellationReason').value;
+        // if (cancellationReason) {
+        //     doc.text(`Motivo do Cancelamento: ${cancellationReason}`, margin, y);
+        //     y += lineHeight;
+        // }
     } else {
         doc.text(`Razão Social: ${document.getElementById('companyName').value}`, margin, y);
         y += lineHeight;
@@ -1396,6 +1396,7 @@ function resetForm() {
     // Update page display
     updatePageDisplay();
 }
+
 
 
 
