@@ -1253,7 +1253,7 @@ async function generatePDF(data) {
         }
         const cancellationReason = document.getElementById('cancellationReason').value;
         if (cancellationReason) {
-            doc.text(`Motivo do Cancelamento: ${cancellationReason}`, margin, y, { maxWidth: 170 });
+            doc.text(`Motivo do Cancelamento: ${cancellationReason}`, margin, y);
             y += lineHeight;
         }
     } else {
@@ -1396,6 +1396,7 @@ function resetForm() {
     // Update page display
     updatePageDisplay();
 }
+
 
 
 
