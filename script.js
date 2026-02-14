@@ -1314,10 +1314,14 @@ async function generatePDF(data) {
     const fixedPhoneText = fixedPhoneSelect.selectedOptions[0].text;
     const fixedPhoneValue = fixedPhoneSelect.value;
     if (fixedPhoneValue === 'newNumber' || fixedPhoneValue === 'portability') {
-        // Marca-texto amarelo
+        // Marca-texto amarelo ajustado ao texto
+        const highlightText = `Telefonia Fixa: ${fixedPhoneText}`;
+        const textWidth = doc.getTextWidth(highlightText);
+        const paddingX = 2;
+        const paddingY = 2;
         doc.setFillColor(255, 255, 0); // amarelo
-        doc.rect(margin - 2, y - 2, 120, lineHeight + 4, 'F');
-        doc.text(`Telefonia Fixa: ${fixedPhoneText}`, margin, y);
+        doc.rect(margin - paddingX, y - lineHeight + 1 - paddingY, textWidth + 2 * paddingX, lineHeight + 2 * paddingY, 'F');
+        doc.text(highlightText, margin, y);
     } else {
         doc.text(`Telefonia Fixa: ${fixedPhoneText}`, margin, y);
     }
