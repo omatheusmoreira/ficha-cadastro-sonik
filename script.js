@@ -1320,7 +1320,7 @@ async function generatePDF(data) {
         const paddingX = 2;
         const paddingY = 1;
         const highlightHeight = lineHeight * 0.7;
-        doc.setFillColor(255, 255, 0, 0.5); // amarelo com opacidade (0.5 = 50%)
+        doc.setFillColor(255, 255, 0); // amarelo
         doc.rect(
             margin - paddingX,
             y - highlightHeight + 1 - paddingY,
@@ -1418,6 +1418,7 @@ function resetForm() {
     // Update page display
     updatePageDisplay();
 }
+
 
 
 
