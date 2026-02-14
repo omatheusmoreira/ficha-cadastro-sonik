@@ -1281,13 +1281,13 @@ async function generatePDF(data) {
     doc.setFont(undefined, 'normal');
     doc.text(`CEP: ${document.getElementById('cep').value}`, margin, y);
     y += lineHeight;
+    doc.text(`Bairro: ${document.getElementById('neighborhood').value}`, margin, y);
+    y += lineHeight;
     doc.text(`Logradouro: ${document.getElementById('street').value}`, margin, y);
     y += lineHeight;
     doc.text(`Número: ${document.getElementById('number').value}`, margin, y);
     y += lineHeight;
     doc.text(`Complemento: ${document.getElementById('complement').value}`, margin, y);
-    y += lineHeight;
-    doc.text(`Bairro: ${document.getElementById('neighborhood').value}`, margin, y);
     y += lineHeight;
     doc.text(`Cidade: ${document.getElementById('city').value}`, margin, y);
     y += lineHeight * 2;
@@ -1320,7 +1320,7 @@ async function generatePDF(data) {
         const paddingX = 2;
         const paddingY = 1;
         const highlightHeight = lineHeight * 0.7;
-        doc.setFillColor(255, 255, 0); // amarelo
+        doc.setFillColor(255, 255, 0); // amarelo puro
         doc.rect(
             margin - paddingX,
             y - highlightHeight + 1 - paddingY,
@@ -1341,9 +1341,9 @@ async function generatePDF(data) {
     y += lineHeight;
     doc.setFontSize(10);
     doc.setFont(undefined, 'normal');
-    doc.text(`Nome do Responsável: ${document.getElementById('technicianName').value}`, margin, y);
-    y += lineHeight;
     doc.text(`Telefone: ${document.getElementById('technicianPhone').value}`, margin, y);
+    y += lineHeight;
+    doc.text(`Nome do Responsável: ${document.getElementById('technicianName').value}`, margin, y);
     y += lineHeight;
     doc.text(`Disponibilidade: ${document.getElementById('availability').selectedOptions[0].text}`, margin, y);
     y += lineHeight;
@@ -1418,7 +1418,6 @@ function resetForm() {
     // Update page display
     updatePageDisplay();
 }
-
 
 
 
