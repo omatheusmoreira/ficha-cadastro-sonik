@@ -1309,7 +1309,18 @@ async function generatePDF(data) {
     y += lineHeight;
     doc.text(`Data de Vencimento: ${document.getElementById('dueDate').value}`, margin, y);
     y += lineHeight;
-    doc.text(`Telefonia Fixa: ${document.getElementById('fixedPhone').selectedOptions[0].text}`, margin, y);
+    // Destacar Telefonia Fixa se for 'Sim'
+    const fixedPhoneSelect = document.getElementById('fixedPhone');
+    const fixedPhoneText = fixedPhoneSelect.selectedOptions[0].text;
+    const fixedPhoneValue = fixedPhoneSelect.value;
+    if (fixedPhoneValue === 'newNumber' || fixedPhoneValue === 'portability') {
+        // Marca-texto amarelo
+        doc.setFillColor(255, 255, 0); // amarelo
+        doc.rect(margin - 2, y - 2, 120, lineHeight + 4, 'F');
+        doc.text(`Telefonia Fixa: ${fixedPhoneText}`, margin, y);
+    } else {
+        doc.text(`Telefonia Fixa: ${fixedPhoneText}`, margin, y);
+    }
     y += lineHeight * 2;
     
     // PAGE 6: AGENDAMENTO
@@ -1396,7 +1407,6 @@ function resetForm() {
     // Update page display
     updatePageDisplay();
 }
-
 
 
 
