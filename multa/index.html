@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Cancelamento</title>
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon.png">
+    <link rel="apple-touch-icon" href="../assets/favicon.png">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container multa-container">
+            <!-- Logo -->
+            <div class="logo-top-container" style="margin-bottom: 6px;">
+                <img src="../assets/multas.png" alt="Cálculo de Multas" style="max-width: 220px; height: auto; display: block; margin: 0 auto;">
+            </div>
+            <div class="tabs-menu">
+                <button class="tab-button active" data-tab="basico">
+                    Cancelamento Plano Básico
+                </button>
+                <button class="tab-button" data-tab="mesh">
+                    Cancelamento Plano Mesh
+                </button>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; gap: 2rem;">
+               
+
+                <div style="width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 1.2rem;">
+                    <label style="font-weight: 500; color: #2d2d2d;">Plano
+                        <select id="plano" style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; margin-top: 0.3rem;"></select>
+                    </label>
+                    <div class="resultado-cancelamento" style="margin-top: -0.4rem;">
+                        Mensalidade: <span id="mensalidadePlano">-</span>
+                    </div>
+                    <label style="font-weight: 500; color: #2d2d2d;">Boletos pagos
+                        <select id="boletosPagos" style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; margin-top: 0.3rem;">
+                            <option value="">Selecione</option>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </label>
+                    <button id="btnCalcular" type="button">Calcular</button>
+                    <div class="resultado-cancelamento multa-resultado">
+                        Boletos restantes: <span id="boletosRestantes">-</span><br>
+                        Multa: <span id="multa">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="multa.js"></script>
+</body>
+</html>
