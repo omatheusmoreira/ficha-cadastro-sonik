@@ -67,6 +67,10 @@ body::before {
     animation: slideIn 0.3s ease-out;
 }
 
+.multa-container {
+    padding-bottom: 28px;
+}
+
 @keyframes slideIn {
     from {
         opacity: 0;
@@ -177,6 +181,20 @@ body::before {
     opacity: 0.8;
 }
 
+.tab-button:focus,
+.tab-button:focus-visible {
+    outline: none;
+    background: linear-gradient(135deg, #018dd7 0%, #0277bd 100%);
+    border-color: #018dd7;
+    color: white;
+}
+
+.tab-button:focus .tab-icon,
+.tab-button:focus-visible .tab-icon {
+    filter: brightness(0) saturate(100%) invert(100%);
+    opacity: 1;
+}
+
 .tab-button.active {
     color: white;
 }
@@ -184,6 +202,28 @@ body::before {
 .tab-button.active .tab-icon {
     filter: brightness(0) saturate(100%) invert(100%);
     opacity: 1;
+}
+
+#btnCalcular {
+    padding: 0.7rem 1.2rem;
+    background: linear-gradient(135deg, #018dd7 0%, #0277bd 100%);
+    color: white;
+    border: 2px solid #018dd7;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: none;
+}
+
+#btnCalcular:hover {
+    background: linear-gradient(135deg, #0175b3 0%, #01639a 100%);
+    border-color: #0175b3;
+    color: white;
+}
+
+#btnCalcular:active {
+    transform: scale(0.95);
+    opacity: 0.8;
 }
 
 /* Page Indicator */
@@ -665,6 +705,20 @@ input[type="file"]::file-selector-button:hover {
     .loading-logo {
         width: 120px;
     }
+}
+
+/* Resultado Calculadora de Cancelamento */
+.resultado-cancelamento {
+    color: #2d2d2d;
+    font-family: Calibri, 'Calibri Light', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    text-align: left;
+}
+
+.multa-resultado {
+    font-size: 16px;
 }
 
 /* Copyright Footer */
