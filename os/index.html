@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitação de O.S.</title>
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon.png">
+    <link rel="apple-touch-icon" href="../assets/favicon.png">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <div class="logo-top-container">
+                <img src="../assets/solicit.png" alt="Solicitação" class="logo-title">
+            </div>
+
+            <div class="tabs-menu">
+                <button class="tab-button active" data-page="1">
+                    <img src="../assets/enderecos.svg" alt="Alteração de Endereço" class="tab-icon">
+                    Alteração de Endereço
+                </button>
+                <button class="tab-button" data-page="2">
+                    <img src="../assets/informacoes.svg" alt="Mudança de Ponto Interno" class="tab-icon">
+                    Mudança de Ponto Interno
+                </button>
+                <button class="tab-button" data-page="3">
+                    <img src="../assets/anexos.svg" alt="Troca de Equipamento" class="tab-icon">
+                    Troca de Equipamento
+                </button>
+            </div>
+
+            <div class="form-page active" data-page="1">
+                <h2>Alteração de Endereço</h2>
+                <div class="form-group">
+                    <label for="osCollaborator">Colaborador</label>
+                    <select id="osCollaborator" name="osCollaborator" required>
+                        <option value="">Selecione...</option>
+                        <option value="beatriz-ferreira">Beatriz Ferreira</option>
+                        <option value="bianca-lacerda">Bianca Lacerda</option>
+                        <option value="daiane-rodrigues">Daiane Rodrigues</option>
+                        <option value="debora-de-paula">Débora de Paula</option>
+                        <option value="douglas-ribeiro">Douglas Ribeiro</option>
+                        <option value="emily-karlin">Emily Karlin</option>
+                        <option value="gabriel-lima">Gabriel Lima</option>
+                        <option value="iasmim-amaral">Iasmim Amaral</option>
+                        <option value="janaina-cicera">Janaína Cícera</option>
+                        <option value="juliana-silva">Juliana Silva</option>
+                        <option value="leticia-alves">Letícia Alves</option>
+                        <option value="leticia-oliveira">Letícia Oliveira</option>
+                        <option value="lorena-fonseca">Lorena Fonseca</option>
+                        <option value="ludmila-camargos">Ludmila Camargos</option>
+                        <option value="marcelle-chaves">Marcelle Chaves</option>
+                        <option value="mariana-antunes">Mariana Antunes</option>
+                        <option value="matheus-moreira">Matheus Moreira</option>
+                        <option value="paloma-toledo">Paloma Toledo</option>
+                        <option value="sophia-karen">Sophia Karen</option>
+                        <option value="thamires-rafaela">Thamires Rafaela</option>
+                        <option value="thiago-silva">Thiago Silva</option>
+                        <option value="valquiria-barbosa">Valquíria Barbosa</option>
+                        <option value="weberth-christian">Weberth Christian</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="osClienteNome">Nome completo do cliente</label>
+                    <input type="text" id="osClienteNome" name="osClienteNome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="osEnderecoAntigo">Endereço antigo</label>
+                    <input type="text" id="osEnderecoAntigo" name="osEnderecoAntigo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="osEnderecoNovo">Novo endereço</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="osNovoCep">CEP <span style="color: red;">*</span></label>
+                    <div class="input-with-button">
+                        <input type="text" id="osNovoCep" name="osNovoCep" placeholder="00000-000" required>
+                        <button type="button" id="searchNovoCep" class="btn-search">Buscar</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="osNovoLogradouro">Logradouro</label>
+                    <input type="text" id="osNovoLogradouro" name="osNovoLogradouro" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="osNovoNumero">Número</label>
+                        <input type="text" id="osNovoNumero" name="osNovoNumero" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="osNovoComplemento">Complemento</label>
+                        <input type="text" id="osNovoComplemento" name="osNovoComplemento" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="osNovoBairro">Bairro</label>
+                    <input type="text" id="osNovoBairro" name="osNovoBairro" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="osNovoCidade">Cidade</label>
+                    <input type="text" id="osNovoCidade" name="osNovoCidade" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="osComprovanteEndereco">Comprovante do novo endereço</label>
+                    <input type="file" id="osComprovanteEndereco" name="osComprovanteEndereco" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="osTelefone">Telefone</label>
+                        <input type="text" id="osTelefone" name="osTelefone" placeholder="(00) 00000-0000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="osResponsavel">Responsável</label>
+                        <input type="text" id="osResponsavel" name="osResponsavel" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="osDisponibilidade">Disponibilidade</label>
+                    <select id="osDisponibilidade" name="osDisponibilidade" required>
+                        <option value="">Selecione...</option>
+                        <option value="morning">Manhã</option>
+                        <option value="afternoon">Tarde</option>
+                        <option value="saturdays">Somente aos Sábados</option>
+                        <option value="businessHours">Horário Comercial</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="osTaxa">Taxa</label>
+                    <select id="osTaxa" name="osTaxa" required>
+                        <option value="">Selecione...</option>
+                        <option value="isento">Renovou para se isentar.</option>
+                        <option value="1x-100">1x R$100,00</option>
+                        <option value="2x-50">2x R$50,00</option>
+                    </select>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <div class="nav-buttons">
+                        <button type="submit" id="osSubmitBtn" class="btn btn-success" title="Enviar">
+                            <img src="../assets/send.svg" alt="Enviar" class="nav-icon">
+                        </button>
+                    </div>
+                    <div class="logo-footer">
+                        <button type="button" id="osResetBtn" class="btn btn-primary" title="Limpar Formulário">
+                            <img src="../assets/clean.svg" alt="Limpar" class="nav-icon" style="filter: brightness(0) saturate(100%) invert(100%);">
+                        </button>
+                        <img src="../assets/sonik.png" alt="Sonik Logo" class="logo-bottom">
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 2: MUDANÇA DE PONTO INTERNO -->
+            <div class="form-page" data-page="2">
+                <h2>Mudança de Ponto Interno</h2>
+                <div class="form-group">
+                    <label for="osPontoCollaborator">Colaborador</label>
+                    <select id="osPontoCollaborator" name="osPontoCollaborator" required>
+                        <option value="">Selecione...</option>
+                        <option value="beatriz-ferreira">Beatriz Ferreira</option>
+                        <option value="bianca-lacerda">Bianca Lacerda</option>
+                        <option value="daiane-rodrigues">Daiane Rodrigues</option>
+                        <option value="debora-de-paula">Débora de Paula</option>
+                        <option value="douglas-ribeiro">Douglas Ribeiro</option>
+                        <option value="emily-karlin">Emily Karlin</option>
+                        <option value="gabriel-lima">Gabriel Lima</option>
+                        <option value="iasmim-amaral">Iasmim Amaral</option>
+                        <option value="janaina-cicera">Janaína Cícera</option>
+                        <option value="juliana-silva">Juliana Silva</option>
+                        <option value="leticia-alves">Letícia Alves</option>
+                        <option value="leticia-oliveira">Letícia Oliveira</option>
+                        <option value="lorena-fonseca">Lorena Fonseca</option>
+                        <option value="ludmila-camargos">Ludmila Camargos</option>
+                        <option value="marcelle-chaves">Marcelle Chaves</option>
+                        <option value="mariana-antunes">Mariana Antunes</option>
+                        <option value="matheus-moreira">Matheus Moreira</option>
+                        <option value="paloma-toledo">Paloma Toledo</option>
+                        <option value="sophia-karen">Sophia Karen</option>
+                        <option value="thamires-rafaela">Thamires Rafaela</option>
+                        <option value="thiago-silva">Thiago Silva</option>
+                        <option value="valquiria-barbosa">Valquíria Barbosa</option>
+                        <option value="weberth-christian">Weberth Christian</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="osPontoClienteNome">Nome completo do cliente</label>
+                    <input type="text" id="osPontoClienteNome" name="osPontoClienteNome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="osPontoRoteadorAtual">Cômodo onde o roteador está atualmente</label>
+                    <input type="text" id="osPontoRoteadorAtual" name="osPontoRoteadorAtual" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="osPontoNovoPonto">Cômodo do novo ponto</label>
+                    <input type="text" id="osPontoNovoPonto" name="osPontoNovoPonto" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="osPontoTelefone">Telefone</label>
+                        <input type="text" id="osPontoTelefone" name="osPontoTelefone" placeholder="(00) 00000-0000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="osPontoResponsavel">Responsável</label>
+                        <input type="text" id="osPontoResponsavel" name="osPontoResponsavel" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="osPontoDisponibilidade">Disponibilidade</label>
+                    <select id="osPontoDisponibilidade" name="osPontoDisponibilidade" required>
+                        <option value="">Selecione...</option>
+                        <option value="morning">Manhã</option>
+                        <option value="afternoon">Tarde</option>
+                        <option value="saturdays">Somente aos Sábados</option>
+                        <option value="businessHours">Horário Comercial</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="osPontoTaxa">Taxa</label>
+                    <select id="osPontoTaxa" name="osPontoTaxa" required>
+                        <option value="">Selecione...</option>
+                        <option value="isento">Renovou para se isentar.</option>
+                        <option value="1x-100">1x R$100,00</option>
+                        <option value="2x-50">2x R$50,00</option>
+                    </select>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <div class="nav-buttons">
+                        <button type="submit" id="osSubmitBtn2" class="btn btn-success" title="Enviar">
+                            <img src="../assets/send.svg" alt="Enviar" class="nav-icon">
+                        </button>
+                    </div>
+                    <div class="logo-footer">
+                        <button type="button" id="osResetBtn2" class="btn btn-primary" title="Limpar Formulário">
+                            <img src="../assets/clean.svg" alt="Limpar" class="nav-icon" style="filter: brightness(0) saturate(100%) invert(100%);">
+                        </button>
+                        <img src="../assets/sonik.png" alt="Sonik Logo" class="logo-bottom">
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 3: TROCA DE EQUIPAMENTO -->
+            <div class="form-page" data-page="3">
+                <h2>Troca de Equipamento</h2>
+                <div class="form-group">
+                    <label for="osEquipCollaborator">Colaborador</label>
+                    <select id="osEquipCollaborator" name="osEquipCollaborator" required>
+                        <option value="">Selecione...</option>
+                        <option value="beatriz-ferreira">Beatriz Ferreira</option>
+                        <option value="bianca-lacerda">Bianca Lacerda</option>
+                        <option value="daiane-rodrigues">Daiane Rodrigues</option>
+                        <option value="debora-de-paula">Débora de Paula</option>
+                        <option value="douglas-ribeiro">Douglas Ribeiro</option>
+                        <option value="emily-karlin">Emily Karlin</option>
+                        <option value="gabriel-lima">Gabriel Lima</option>
+                        <option value="iasmim-amaral">Iasmim Amaral</option>
+                        <option value="janaina-cicera">Janaína Cícera</option>
+                        <option value="juliana-silva">Juliana Silva</option>
+                        <option value="leticia-alves">Letícia Alves</option>
+                        <option value="leticia-oliveira">Letícia Oliveira</option>
+                        <option value="lorena-fonseca">Lorena Fonseca</option>
+                        <option value="ludmila-camargos">Ludmila Camargos</option>
+                        <option value="marcelle-chaves">Marcelle Chaves</option>
+                        <option value="mariana-antunes">Mariana Antunes</option>
+                        <option value="matheus-moreira">Matheus Moreira</option>
+                        <option value="paloma-toledo">Paloma Toledo</option>
+                        <option value="sophia-karen">Sophia Karen</option>
+                        <option value="thamires-rafaela">Thamires Rafaela</option>
+                        <option value="thiago-silva">Thiago Silva</option>
+                        <option value="valquiria-barbosa">Valquíria Barbosa</option>
+                        <option value="weberth-christian">Weberth Christian</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="osEquipClienteNome">Nome completo do cliente</label>
+                    <input type="text" id="osEquipClienteNome" name="osEquipClienteNome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="osEquipMotivo">Motivo da troca do equipamento</label>
+                    <select id="osEquipMotivo" name="osEquipMotivo" required>
+                        <option value="">Selecione...</option>
+                        <option value="renovacao">Renovação</option>
+                        <option value="retencao">Retenção</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="osEquipAtual">Equipamento que o cliente possui atualmente</label>
+                    <select id="osEquipAtual" name="osEquipAtual" required>
+                        <option value="">Selecione...</option>
+                        <option value="wi-fi5">Wi-Fi 5</option>
+                        <option value="wi-fi6">Wi-Fi 6</option>
+                        <option value="wi-fi7">Wi-Fi 7</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="osEquipNovo">Novo equipamento que será instalado para o cliente</label>
+                    <select id="osEquipNovo" name="osEquipNovo" required>
+                        <option value="">Selecione...</option>
+                        <option value="wi-fi5">Wi-Fi 5</option>
+                        <option value="wi-fi6">Wi-Fi 6</option>
+                        <option value="wi-fi7">Wi-Fi 7</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="osEquipTelefone">Telefone</label>
+                        <input type="text" id="osEquipTelefone" name="osEquipTelefone" placeholder="(00) 00000-0000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="osEquipResponsavel">Responsável</label>
+                        <input type="text" id="osEquipResponsavel" name="osEquipResponsavel" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="osEquipDisponibilidade">Disponibilidade</label>
+                    <select id="osEquipDisponibilidade" name="osEquipDisponibilidade" required>
+                        <option value="">Selecione...</option>
+                        <option value="morning">Manhã</option>
+                        <option value="afternoon">Tarde</option>
+                        <option value="saturdays">Somente aos Sábados</option>
+                        <option value="businessHours">Horário Comercial</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="osEquipTaxa">Taxa</label>
+                    <select id="osEquipTaxa" name="osEquipTaxa" required>
+                        <option value="">Selecione...</option>
+                        <option value="isento">Renovou para se isentar.</option>
+                        <option value="1x-100">1x R$100,00</option>
+                        <option value="2x-50">2x R$50,00</option>
+                    </select>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <div class="nav-buttons">
+                        <button type="submit" id="osSubmitBtn3" class="btn btn-success" title="Enviar">
+                            <img src="../assets/send.svg" alt="Enviar" class="nav-icon">
+                        </button>
+                    </div>
+                    <div class="logo-footer">
+                        <button type="button" id="osResetBtn3" class="btn btn-primary" title="Limpar Formulário">
+                            <img src="../assets/clean.svg" alt="Limpar" class="nav-icon" style="filter: brightness(0) saturate(100%) invert(100%);">
+                        </button>
+                        <img src="../assets/sonik.png" alt="Sonik Logo" class="logo-bottom">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="copyright-footer">
+            © 2025 BackOffice Sonik Internet®
+        </div>
+    </div>
+    <script src="os.js"></script>
+</body>
+</html>
