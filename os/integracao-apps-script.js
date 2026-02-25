@@ -1,7 +1,8 @@
 // ADICIONE ISTO AO FINAL DO SEU os.js
 
 // INTEGRAÇÃO COM GOOGLE APPS SCRIPT PARA CRIAÇÃO DE DOCUMENTOS NO DRIVE
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby1O61A0-MVrDOOR-_CRKPShKsOtxuX8hdw6Y6vy893DbhltUeZX4R-VWbIOn08DFSj/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWrCbFnvCmvLtCQcAUoW9Y6LXPka2pIKgLqKzFAGsCSWPfGalpUaJjYCzanKb7JjBI/exec';
+
 
 // Função para enviar dados para o Apps Script
 function sendToGoogleDrive(formDataObj, osType) {
@@ -140,3 +141,4 @@ function showErrorMessage(message) {
       sendToGoogleDrive(formData, '3');
     });
 */
+
