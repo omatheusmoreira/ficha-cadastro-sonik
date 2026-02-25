@@ -235,15 +235,23 @@ function initializeFormButtons() {
     });
     
     // Botões enviar (todas as páginas - temporariamente desabilitados)
-    const submitBtns = ['osSubmitBtn', 'osSubmitBtn2', 'osSubmitBtn3'];
-    submitBtns.forEach(btnId => {
-        const submitBtn = document.getElementById(btnId);
-        if (submitBtn) {
-            submitBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                alert('Funcionalidade de envio em desenvolvimento.');
-            });
-        }
+    // Submit button
+    document.getElementById('osSubmitBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const formData = collectFormData(1);
+      sendToGoogleDrive(formData, '1');
+    });
+
+    document.getElementById('osSubmitBtn2')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const formData = collectFormData(2);
+      sendToGoogleDrive(formData, '2');
+    });
+
+    document.getElementById('osSubmitBtn3')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const formData = collectFormData(3);
+      sendToGoogleDrive(formData, '3');
     });
 }
 
