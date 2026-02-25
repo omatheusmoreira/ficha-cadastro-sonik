@@ -1,36 +1,43 @@
 // INTEGRAÇÃO COM GOOGLE APPS SCRIPT PARA CRIAÇÃO DE DOCUMENTOS NO DRIVE
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyih8E363ivO54PsTyJzg53D1TEINnCCE_R4NAZwYMWhOEnYhKA2qoCTvMVr4g52QJ_/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwMP9gaLiNVLfTS2TjVlYN4fOc03_uDThyjYbM83IioXTRo7nDMC4nsmev52jxx-jUP/exec';
 
 // Função para enviar dados para o Apps Script
 function sendToGoogleDrive(formDataObj, osType) {
   try {
-    // Preparar dados
-    const dataToSend = {
-      osType: osType,
-      clienteNome: formDataObj.clienteNome || 'Sem nome',
-      ...formDataObj
-    };
+    // Preparar dados como FormData (evita CORS)
+    const formData = new FormData();
+    formData.append('osType', osType);
+    formData.append('clienteNome', formDataObj.clienteNome || 'Sem nome');
+    
+    // Adicionar todos os outros campos
+    for (const [key, value] of Object.entries(formDataObj)) {
+      if (key !== 'clienteNome') {
+        formData.append(key, value);
+      }
+    }
 
-    // Fazer requisição
+    // Fazer requisição com FormData
     fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dataToSend)
+      body: formData
     })
-    .then(response => response.json())
-    .then(result => {
-      if (result.success) {
-        showSuccessMessage('✓ OS criada com sucesso!');
-        console.log('Documento criado:', result.fileName);
-        // Limpar formulário após sucesso
-        setTimeout(() => {
-          resetForm();
-          goToPage(1);
-        }, 2000);
-      } else {
-        showErrorMessage('Erro: ' + result.message);
+    .then(response => response.text())
+    .then(responseText => {
+      try {
+        const result = JSON.parse(responseText);
+        if (result.success) {
+          showSuccessMessage('✓ OS criada com sucesso!');
+          console.log('Documento criado:', result.fileName);
+          // Limpar formulário após sucesso
+          setTimeout(() => {
+            resetForm();
+            goToPage(1);
+          }, 2000);
+        } else {
+          showErrorMessage('Erro: ' + result.message);
+        }
+      } catch (e) {
+        showErrorMessage('Erro ao processar resposta: ' + responseText);
       }
     })
     .catch(error => {
