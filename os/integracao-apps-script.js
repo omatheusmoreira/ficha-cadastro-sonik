@@ -1,8 +1,5 @@
-// ADICIONE ISTO AO FINAL DO SEU os.js
-
 // INTEGRAÇÃO COM GOOGLE APPS SCRIPT PARA CRIAÇÃO DE DOCUMENTOS NO DRIVE
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWrCbFnvCmvLtCQcAUoW9Y6LXPka2pIKgLqKzFAGsCSWPfGalpUaJjYCzanKb7JjBI/exec';
-
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYgDZV3d6JazksLQG1ATqun7Nk_6NFOBu5zklFPBriNv_A5vLIXsVAVYX33DofLAzA/exec';
 
 // Função para enviar dados para o Apps Script
 function sendToGoogleDrive(formDataObj, osType) {
@@ -118,27 +115,3 @@ function showErrorMessage(message) {
     setTimeout(() => alertDiv.remove(), 5000);
   }
 }
-
-// INTEGRAÇÃO COM BOTÕES DE SUBMIT
-// Encontre a função initializeFormButtons() no seu os.js e SUBSTITUA a parte do submit por:
-/*
-    // Submit button
-    document.getElementById('osSubmitBtn')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      const formData = collectFormData(1);
-      sendToGoogleDrive(formData, '1');
-    });
-
-    document.getElementById('osSubmitBtn2')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      const formData = collectFormData(2);
-      sendToGoogleDrive(formData, '2');
-    });
-
-    document.getElementById('osSubmitBtn3')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      const formData = collectFormData(3);
-      sendToGoogleDrive(formData, '3');
-    });
-*/
-
