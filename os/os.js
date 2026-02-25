@@ -262,12 +262,6 @@ function resetForm() {
         input.value = '';
     });
     
-    // Limpa arquivo
-    const fileInput = document.getElementById('osComprovanteEndereco');
-    if (fileInput) {
-        fileInput.value = '';
-    }
-    
     // Reseta selects
     document.querySelectorAll('select').forEach(select => {
         select.selectedIndex = 0;
