@@ -270,3 +270,40 @@ function resetForm() {
     // Scroll para o topo
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+// Loading Modal Functions
+function showLoadingModal() {
+    const modal = document.getElementById('loadingModal');
+    if (!modal) return;
+
+    modal.classList.add('active');
+
+    // Reset status
+    const statusItem = document.getElementById('statusPdf');
+    if (statusItem) statusItem.classList.remove('completed');
+
+    const statusText = document.querySelector('#statusPdf .status-text');
+    if (statusText) statusText.textContent = 'Enviando dados...';
+
+    // Mesma cor padrão da página principal (PF)
+    const spinner = document.querySelector('.loading-spinner');
+    if (spinner) spinner.style.borderTopColor = '#018dd7';
+}
+
+function hideLoadingModal() {
+    const modal = document.getElementById('loadingModal');
+    if (!modal) return;
+
+    modal.classList.remove('active');
+}
+
+function updateLoadingStatus(elementId, success) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    if (success) {
+        element.classList.add('completed');
+    } else {
+        element.classList.remove('completed');
+    }
+}
