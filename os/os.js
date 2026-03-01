@@ -279,6 +279,8 @@ function validateCurrentPageRequiredFields() {
     const currentPageElement = document.querySelector(`.form-page[data-page="${currentPage}"]`);
     if (!currentPageElement) return false;
 
+    clearValidationMessage(currentPageElement);
+
     const requiredFields = currentPageElement.querySelectorAll('input[required], select[required], textarea[required]');
     let firstInvalidField = null;
 
@@ -298,7 +300,7 @@ function validateCurrentPageRequiredFields() {
     }
 
     const pendingFieldName = getFieldLabel(firstInvalidField);
-    alert(`Campo obrigatório pendente: ${pendingFieldName}`);
+    showValidationMessage(currentPageElement, `Campo obrigatório pendente: ${pendingFieldName}`);
     firstInvalidField.focus();
     return false;
 }
@@ -313,7 +315,28 @@ function initializeRequiredFieldValidationFeedback() {
                 field.style.borderColor = '';
             }
         });
+
+        field.addEventListener('mouseenter', () => {
+            field.style.borderColor = '';
+        });
     });
+}
+
+function showValidationMessage(pageElement, message) {
+    clearValidationMessage(pageElement);
+
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-error os-validation-alert';
+    alertDiv.textContent = message;
+
+    pageElement.insertBefore(alertDiv, pageElement.firstChild.nextSibling);
+}
+
+function clearValidationMessage(pageElement) {
+    const existingAlert = pageElement.querySelector('.os-validation-alert');
+    if (existingAlert) {
+        existingAlert.remove();
+    }
 }
 
 // Limpa o formulário
