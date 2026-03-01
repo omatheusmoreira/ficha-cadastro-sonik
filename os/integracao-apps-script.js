@@ -3,6 +3,8 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3eDDk8Ovtwu41
 
 // Função para enviar dados para o Apps Script
 function sendToGoogleDrive(formDataObj, osType) {
+  showLoadingModal();
+
   try {
     // Preparar dados como FormData (evita CORS)
     const formData = new FormData();
@@ -26,26 +28,34 @@ function sendToGoogleDrive(formDataObj, osType) {
       try {
         const result = JSON.parse(responseText);
         if (result.success) {
-          showSuccessMessage('✓ OS criada com sucesso!');
+          updateLoadingStatus('statusPdf', true);
+          const statusText = document.querySelector('#statusPdf .status-text');
+          if (statusText) statusText.textContent = 'Enviado com sucesso ✅';
           console.log('Documento criado:', result.fileName);
+
           // Limpar formulário após sucesso
           setTimeout(() => {
+            hideLoadingModal();
             resetForm();
             goToPage(1);
           }, 2000);
         } else {
+          hideLoadingModal();
           showErrorMessage('Erro: ' + result.message);
         }
       } catch (e) {
+        hideLoadingModal();
         showErrorMessage('Erro ao processar resposta: ' + responseText);
       }
     })
     .catch(error => {
+      hideLoadingModal();
       showErrorMessage('Erro ao enviar dados: ' + error.message);
       console.error('Erro:', error);
     });
 
   } catch (error) {
+    hideLoadingModal();
     showErrorMessage('Erro: ' + error.message);
     console.error('Erro na submissão:', error);
   }
