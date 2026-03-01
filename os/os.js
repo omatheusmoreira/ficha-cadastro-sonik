@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeUppercaseInputs();
     initializePhoneMask();
     applyTabHoverStyles();
+    initializeRequiredFieldValidationFeedback();
     initializeFormButtons();
 });
 
@@ -238,20 +239,80 @@ function initializeFormButtons() {
     // Submit button
     document.getElementById('osSubmitBtn')?.addEventListener('click', (e) => {
       e.preventDefault();
+      if (!validateCurrentPageRequiredFields()) return;
       const formData = collectFormData(1);
       sendToGoogleDrive(formData, '1');
     });
 
     document.getElementById('osSubmitBtn2')?.addEventListener('click', (e) => {
       e.preventDefault();
+      if (!validateCurrentPageRequiredFields()) return;
       const formData = collectFormData(2);
       sendToGoogleDrive(formData, '2');
     });
 
     document.getElementById('osSubmitBtn3')?.addEventListener('click', (e) => {
       e.preventDefault();
+      if (!validateCurrentPageRequiredFields()) return;
       const formData = collectFormData(3);
       sendToGoogleDrive(formData, '3');
+    });
+}
+
+function getFieldLabel(field) {
+    const formGroup = field.closest('.form-group');
+    const label = formGroup?.querySelector('label');
+    if (!label) return field.name || field.id || 'campo';
+
+    return label.textContent.replace('*', '').trim();
+}
+
+function isFieldEmpty(field) {
+    if (field.tagName === 'SELECT') {
+        return !field.value || field.value.trim() === '';
+    }
+
+    return !field.value || field.value.trim() === '';
+}
+
+function validateCurrentPageRequiredFields() {
+    const currentPageElement = document.querySelector(`.form-page[data-page="${currentPage}"]`);
+    if (!currentPageElement) return false;
+
+    const requiredFields = currentPageElement.querySelectorAll('input[required], select[required], textarea[required]');
+    let firstInvalidField = null;
+
+    requiredFields.forEach(field => {
+        if (isFieldEmpty(field)) {
+            field.style.borderColor = '#dc3545';
+            if (!firstInvalidField) {
+                firstInvalidField = field;
+            }
+        } else {
+            field.style.borderColor = '';
+        }
+    });
+
+    if (!firstInvalidField) {
+        return true;
+    }
+
+    const pendingFieldName = getFieldLabel(firstInvalidField);
+    alert(`Campo obrigatório pendente: ${pendingFieldName}`);
+    firstInvalidField.focus();
+    return false;
+}
+
+function initializeRequiredFieldValidationFeedback() {
+    const requiredFields = document.querySelectorAll('input[required], select[required], textarea[required]');
+
+    requiredFields.forEach(field => {
+        const eventName = field.tagName === 'SELECT' ? 'change' : 'input';
+        field.addEventListener(eventName, () => {
+            if (!isFieldEmpty(field)) {
+                field.style.borderColor = '';
+            }
+        });
     });
 }
 
