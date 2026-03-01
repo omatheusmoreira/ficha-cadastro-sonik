@@ -283,24 +283,22 @@ function validateCurrentPageRequiredFields() {
 
     const requiredFields = currentPageElement.querySelectorAll('input[required], select[required], textarea[required]');
     let firstInvalidField = null;
+    const pendingFields = [];
 
     requiredFields.forEach(field => {
         if (isFieldEmpty(field)) {
-            field.style.borderColor = '#dc3545';
+            pendingFields.push(getFieldLabel(field));
             if (!firstInvalidField) {
                 firstInvalidField = field;
             }
-        } else {
-            field.style.borderColor = '';
         }
     });
 
-    if (!firstInvalidField) {
+    if (pendingFields.length === 0) {
         return true;
     }
 
-    const pendingFieldName = getFieldLabel(firstInvalidField);
-    showValidationMessage(currentPageElement, `Campo obrigatório pendente: ${pendingFieldName}`);
+    showValidationMessage(currentPageElement, pendingFields);
     firstInvalidField.focus();
     return false;
 }
@@ -311,23 +309,21 @@ function initializeRequiredFieldValidationFeedback() {
     requiredFields.forEach(field => {
         const eventName = field.tagName === 'SELECT' ? 'change' : 'input';
         field.addEventListener(eventName, () => {
-            if (!isFieldEmpty(field)) {
-                field.style.borderColor = '';
+            const currentPageElement = document.querySelector(`.form-page[data-page="${currentPage}"]`);
+            if (currentPageElement) {
+                clearValidationMessage(currentPageElement);
             }
-        });
-
-        field.addEventListener('mouseenter', () => {
-            field.style.borderColor = '';
         });
     });
 }
 
-function showValidationMessage(pageElement, message) {
+function showValidationMessage(pageElement, pendingFields) {
     clearValidationMessage(pageElement);
 
     const alertDiv = document.createElement('div');
     alertDiv.className = 'alert alert-error os-validation-alert';
-    alertDiv.textContent = message;
+    const uniqueFields = [...new Set(pendingFields)];
+    alertDiv.textContent = `Campos obrigatórios pendentes: ${uniqueFields.join(', ')}`;
 
     pageElement.insertBefore(alertDiv, pageElement.firstChild.nextSibling);
 }
