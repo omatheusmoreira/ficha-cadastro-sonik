@@ -1,5 +1,5 @@
 // INTEGRAÇÃO COM GOOGLE APPS SCRIPT PARA CRIAÇÃO DE DOCUMENTOS NO DRIVE
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-Z2OEGlmlHvhiGpE7_bsOUEcfbfQDHNgdxanBLu28dO8Y-MJEXbkf73yfNit86nx6/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3eDDk8Ovtwu41uwTOTVeTF1ERn1YnoqgU7vZs2XG_Worn0618u-6jRCJkqR8AGC6x/exec';
 
 // Função para enviar dados para o Apps Script
 function sendToGoogleDrive(formDataObj, osType) {
@@ -92,7 +92,6 @@ function collectFormData(pageNumber) {
     formData.osEquipTelefone = document.getElementById('osEquipTelefone')?.value || '';
     formData.osEquipResponsavel = document.getElementById('osEquipResponsavel')?.value || '';
     formData.osEquipDisponibilidade = document.getElementById('osEquipDisponibilidade')?.value || '';
-    formData.osEquipTaxa = document.getElementById('osEquipTaxa')?.value || '';
   }
 
   return formData;
@@ -122,9 +121,5 @@ function showErrorMessage(message) {
     setTimeout(() => alertDiv.remove(), 5000);
   }
 }
-
-
-
-
 
 
