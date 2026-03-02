@@ -1,5 +1,5 @@
 // INTEGRAÇÃO COM GOOGLE APPS SCRIPT PARA CRIAÇÃO DE DOCUMENTOS NO DRIVE
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyi1eL7iNNdkvo3y5q3A6vIeMQp9cGCcRhpDlYWAqhjLoN2tjd1TK1S4QnvMhQsDAAz/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyOVkQOVi_of4Af14uKWm91QZX8PfcqfebHzgw7rZTch9G6wfcti4NoENbZfCjE1CM/exec';
 
 // Função para enviar dados para o Apps Script
 function sendToGoogleDrive(formDataObj, osType) {
@@ -80,6 +80,7 @@ function collectFormData(pageNumber) {
     formData.osResponsavel = document.getElementById('osResponsavel')?.value || '';
     formData.osDisponibilidade = document.getElementById('osDisponibilidade')?.value || '';
     formData.osTaxa = document.getElementById('osTaxa')?.value || '';
+    formData.osObservacoes = document.getElementById('osObservacoes')?.value || '';
 
   } else if (pageNumber === 2) {
     // PAGE 2: Mudança de Ponto Interno
@@ -91,6 +92,7 @@ function collectFormData(pageNumber) {
     formData.osPontoResponsavel = document.getElementById('osPontoResponsavel')?.value || '';
     formData.osPontoDisponibilidade = document.getElementById('osPontoDisponibilidade')?.value || '';
     formData.osPontoTaxa = document.getElementById('osPontoTaxa')?.value || '';
+    formData.osPontoObservacoes = document.getElementById('osPontoObservacoes')?.value || '';
 
   } else if (pageNumber === 3) {
     // PAGE 3: Troca de Equipamento
@@ -102,6 +104,7 @@ function collectFormData(pageNumber) {
     formData.osEquipTelefone = document.getElementById('osEquipTelefone')?.value || '';
     formData.osEquipResponsavel = document.getElementById('osEquipResponsavel')?.value || '';
     formData.osEquipDisponibilidade = document.getElementById('osEquipDisponibilidade')?.value || '';
+    formData.osEquipObservacoes = document.getElementById('osEquipObservacoes')?.value || '';
   }
 
   return formData;
@@ -131,6 +134,5 @@ function showErrorMessage(message) {
     setTimeout(() => alertDiv.remove(), 5000);
   }
 }
-
 
 
