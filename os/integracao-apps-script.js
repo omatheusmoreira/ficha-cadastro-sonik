@@ -1,5 +1,5 @@
 // INTEGRAÇÃO COM GOOGLE APPS SCRIPT PARA CRIAÇÃO DE DOCUMENTOS NO DRIVE
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyOVkQOVi_of4Af14uKWm91QZX8PfcqfebHzgw7rZTch9G6wfcti4NoENbZfCjE1CM/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_vkW7wTuiFwzWKzgtiZ-ky5ltSshn0-uJMapnbm9zue6BdROXmEGLklI2bSGQs5sA/exec';
 
 // Função para enviar dados para o Apps Script
 function sendToGoogleDrive(formDataObj, osType) {
@@ -134,5 +134,6 @@ function showErrorMessage(message) {
     setTimeout(() => alertDiv.remove(), 5000);
   }
 }
+
 
 
