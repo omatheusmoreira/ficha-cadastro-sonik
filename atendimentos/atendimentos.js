@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeFormButtons();
     initializePrevisao();
     initializeLiveOutput();
+    initializeCpfMaskHe2();
 });
 
 // ============================================================
@@ -128,7 +129,10 @@ function initializeUppercaseInputs() {
         'atEndCliente', 'atEndEnderecoAntigo', 'atEndLogradouro',
         'atEndNumero', 'atEndComplemento', 'atEndBairro', 'atEndCidade', 'atEndResponsavel',
         'atPontoCliente', 'atPontoComodoAtual', 'atPontoNovoPonto', 'atPontoResponsavel',
-        'atMeshCliente', 'atMeshComodoRoteador', 'atMeshComodosMesh', 'atMeshResponsavel'
+        'atMeshCliente', 'atMeshComodoRoteador', 'atMeshComodosMesh', 'atMeshResponsavel',
+        'atHe2NomeSonik', 'atHe2NomeCemig', 'atHe2RgCemig',
+        'atHe2NomeSolicitante', 'atHe2Logradouro', 'atHe2Bairro',
+        'atHe2Numero', 'atHe2Cidade', 'atHe2UnidadeConsumidora'
     ];
     ids.forEach(id => {
         const el = document.getElementById(id);
@@ -140,7 +144,8 @@ function initializeUppercaseInputs() {
 // PHONE MASK
 // ============================================================
 function initializePhoneMask() {
-    ['atEquipTelefone', 'atEndTelefone', 'atPontoTelefone', 'atMeshTelefone'].forEach(id => {
+    ['atEquipTelefone', 'atEndTelefone', 'atPontoTelefone', 'atMeshTelefone',
+     'atHe2TelefoneSonik', 'atHe2TelefoneSolicitante'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', limitPhoneInput);
     });
@@ -212,6 +217,16 @@ function initializeFormButtons() {
     document.getElementById('atEndResetBtn')?.addEventListener('click',  () => resetPage(2));
     document.getElementById('atPontoResetBtn')?.addEventListener('click', () => resetPage(3));
     document.getElementById('atMeshResetBtn')?.addEventListener('click',  () => resetPage(4));
+    document.getElementById('atHe2ResetBtn')?.addEventListener('click',   () => resetPage(5));
+
+    // CEP HE²
+    const he2CepBtn   = document.getElementById('atHe2SearchCep');
+    const he2CepInput = document.getElementById('atHe2Cep');
+    if (he2CepBtn)   he2CepBtn.addEventListener('click', searchCepHe2);
+    if (he2CepInput) {
+        he2CepInput.addEventListener('blur', e => { if (e.target.value) searchCepHe2(); });
+        he2CepInput.addEventListener('input', limitCepInputHe2);
+    }
 }
 
 // ============================================================
@@ -240,10 +255,18 @@ function initializeLiveOutput() {
                    'atMeshComodoRoteador','atMeshComodosMesh','atMeshTelefone','atMeshResponsavel',
                    'atMeshDisponibilidade','atMeshObs'];
 
+    const he2 = ['atHe2Atendente',
+                  'atHe2NomeSonik','atHe2CpfSonik','atHe2TelefoneSonik',
+                  'atHe2NomeCemig','atHe2CpfCemig','atHe2RgCemig',
+                  'atHe2NomeSolicitante','atHe2EmailSolicitante','atHe2TelefoneSolicitante',
+                  'atHe2Cep','atHe2Logradouro','atHe2Bairro','atHe2Numero',
+                  'atHe2Complemento','atHe2Cidade','atHe2UnidadeConsumidora'];
+
     watchFields(equip, renderEquipOutput);
     watchFields(end, renderEndOutput);
     watchFields(ponto, renderPontoOutput);
     watchFields(mesh, renderMeshOutput);
+    watchFields(he2, renderHe2Output);
 }
 
 // ── helpers ──
@@ -407,6 +430,107 @@ function renderMeshOutput() {
     setOutput('atMeshOutput', lines.join('\n'));
 }
 
+// PAGE 5 — HE² SOLAR
+let he2Tipo = 'pf'; // 'pf' ou 'pj'
+
+function selectHe2Tipo(tipo) {
+    he2Tipo = tipo;
+    document.getElementById('atHe2BtnPf')?.classList.toggle('active', tipo === 'pf');
+    document.getElementById('atHe2BtnPj')?.classList.toggle('active', tipo === 'pj');
+    renderHe2Output();
+}
+
+function maskCpfAtendimentos(el) {
+    let v = el.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length <= 3)       el.value = v;
+    else if (v.length <= 6)  el.value = `${v.slice(0,3)}.${v.slice(3)}`;
+    else if (v.length <= 9)  el.value = `${v.slice(0,3)}.${v.slice(3,6)}.${v.slice(6)}`;
+    else                     el.value = `${v.slice(0,3)}.${v.slice(3,6)}.${v.slice(6,9)}-${v.slice(9)}`;
+}
+
+function initializeCpfMaskHe2() {
+    ['atHe2CpfSonik','atHe2CpfCemig'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => maskCpfAtendimentos(el));
+    });
+}
+
+function limitCepInputHe2(e) {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 8);
+    e.target.value = v.length > 5 ? `${v.slice(0,5)}-${v.slice(5)}` : v;
+}
+
+async function searchCepHe2() {
+    const cepInput = document.getElementById('atHe2Cep');
+    const cep = cepInput.value.replace(/\D/g, '');
+    if (cep.length !== 8) { alert('CEP deve conter 8 dígitos'); return; }
+    try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+        if (data.erro) { alert('CEP não encontrado'); return; }
+        document.getElementById('atHe2Logradouro').value = (data.logradouro || '').toUpperCase();
+        document.getElementById('atHe2Bairro').value     = (data.bairro    || '').toUpperCase();
+        document.getElementById('atHe2Cidade').value     = (data.localidade|| '').toUpperCase();
+        cepInput.value = `${cep.slice(0,5)}-${cep.slice(5)}`;
+        document.getElementById('atHe2Numero').focus();
+    } catch (err) {
+        console.error('Erro ao buscar CEP:', err);
+        alert('Erro ao buscar CEP. Tente novamente.');
+    }
+}
+
+function renderHe2Output() {
+    if (!isPageAllFilled(5)) { setOutput('atHe2Output', ''); return; }
+
+    const tipo              = he2Tipo === 'pf' ? 'PESSOA FÍSICA' : 'PESSOA JURÍDICA';
+    const atendente         = val('atHe2Atendente');
+    const nomeSonik         = val('atHe2NomeSonik');
+    const cpfSonik          = val('atHe2CpfSonik');
+    const telSonik          = val('atHe2TelefoneSonik');
+    const nomeCemig         = val('atHe2NomeCemig');
+    const cpfCemig          = val('atHe2CpfCemig');
+    const rgCemig           = val('atHe2RgCemig');
+    const nomeSolic         = val('atHe2NomeSolicitante');
+    const emailSolic        = val('atHe2EmailSolicitante');
+    const telSolic          = val('atHe2TelefoneSolicitante');
+    const cep               = val('atHe2Cep');
+    const logradouro        = val('atHe2Logradouro');
+    const bairro            = val('atHe2Bairro');
+    const numero            = val('atHe2Numero');
+    const complemento       = val('atHe2Complemento');
+    const cidade            = val('atHe2Cidade');
+    const unidadeConsumidora= val('atHe2UnidadeConsumidora');
+
+    const lines = [];
+    lines.push(`** ATENDENTE: ${atendente}`);
+    lines.push(`** TIPO: ${tipo}`);
+    lines.push(``);
+    lines.push(`** DADOS DO TITULAR SONIK`);
+    lines.push(`** NOME: ${nomeSonik}`);
+    lines.push(`** CPF: ${cpfSonik}`);
+    lines.push(`** TELEFONE: ${telSonik}`);
+    lines.push(``);
+    lines.push(`** DADOS DO TITULAR CEMIG`);
+    lines.push(`** NOME: ${nomeCemig}`);
+    lines.push(`** CPF: ${cpfCemig}`);
+    lines.push(`** RG: ${rgCemig}`);
+    lines.push(``);
+    lines.push(`** SOLICITANTE`);
+    lines.push(`** NOME: ${nomeSolic}`);
+    lines.push(`** E-MAIL: ${emailSolic}`);
+    lines.push(`** TELEFONE: ${telSolic}`);
+    lines.push(``);
+    lines.push(`** ENDEREÇO`);
+    lines.push(`** CEP: ${cep}`);
+    lines.push(`** LOGRADOURO: ${logradouro}`);
+    lines.push(`** BAIRRO: ${bairro}`);
+    lines.push(`** NÚMERO: ${numero}${complemento ? ' / COMPLEMENTO: ' + complemento : ''}`);
+    lines.push(`** CIDADE: ${cidade}`);
+    lines.push(`** UNIDADE CONSUMIDORA: ${unidadeConsumidora}`);
+
+    setOutput('atHe2Output', lines.join('\n'));
+}
+
 // ============================================================
 // VERIFICAÇÃO DE COMPLETUDE
 // ============================================================
@@ -534,8 +658,11 @@ function resetPage(pageNum) {
     }
 
     // Limpa output da página
-    const outputMap = { 1: 'atEquipOutput', 2: 'atEndOutput', 3: 'atPontoOutput', 4: 'atMeshOutput' };
+    const outputMap = { 1: 'atEquipOutput', 2: 'atEndOutput', 3: 'atPontoOutput', 4: 'atMeshOutput', 5: 'atHe2Output' };
     setOutput(outputMap[pageNum], '');
+
+    // Reset HE² tipo (page 5)
+    if (pageNum === 5) selectHe2Tipo('pf');
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
