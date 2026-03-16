@@ -134,6 +134,65 @@
             transform: scale(0.96);
         }
 
+        /* ── he² Tipo Selector ── */
+        .he2-tipo-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .he2-tipo-btn {
+            flex: 1;
+            max-width: 180px;
+            padding: 10px 20px;
+            background: #f5f5f5;
+            color: #018dd7;
+            border: 2px solid #018dd7;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: Calibri, 'Calibri Light', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+        }
+        .he2-tipo-btn:hover {
+            background: #e3f4fc;
+            box-shadow: 0 3px 10px rgba(1, 141, 215, 0.2);
+        }
+        .he2-tipo-btn.active {
+            background: linear-gradient(135deg, #018dd7 0%, #0277bd 100%);
+            color: white;
+            border-color: #018dd7;
+        }
+        .he2-tipo-btn.active:hover {
+            background: linear-gradient(135deg, #0175b3 0%, #01639a 100%);
+        }
+        .he2-tipo-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* ── Section title ── */
+        .form-section-title {
+            font-family: Calibri, 'Calibri Light', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #018dd7;
+            text-align: center;
+            letter-spacing: 0.5px;
+            margin: 18px 0 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #d0eaf9;
+        }
+
+        /* ── field-hint ── */
+        .field-hint {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+            font-family: Calibri, 'Calibri Light', sans-serif;
+            font-style: italic;
+        }
+
     </style>
 </head>
 <body>
@@ -161,6 +220,10 @@
                 <button class="tab-button" data-page="4">
                     <img src="../assets/mesh.svg" alt="Instalação Ponto Mesh" class="tab-icon">
                     Instalação Ponto Mesh
+                </button>
+                <button class="tab-button" data-page="5">
+                    <img src="../assets/he2.svg" alt="HE² Solar" class="tab-icon">
+                    he² Solar
                 </button>
             </div>
 
@@ -681,6 +744,176 @@
                 <div class="form-navigation">
                     <div class="logo-footer">
                         <button type="button" id="atMeshResetBtn" class="btn btn-primary" title="Limpar Formulário">
+                            <img src="../assets/clean.svg" alt="Limpar" class="nav-icon" style="filter: brightness(0) saturate(100%) invert(100%);">
+                        </button>
+                        <img src="../assets/sonik.png" alt="Sonik Logo" class="logo-bottom">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- ══════════════════════════════════════ -->
+            <!-- PAGE 5: he² SOLAR                          -->
+            <!-- ══════════════════════════════════════ -->
+            <div class="form-page" data-page="5">
+                <h2>he² Solar</h2>
+
+                <!-- Seletor PF / PJ -->
+                <div class="he2-tipo-selector">
+                    <button type="button" class="he2-tipo-btn active" id="atHe2BtnPf" onclick="selectHe2Tipo('pf')">Pessoa Física</button>
+                    <button type="button" class="he2-tipo-btn" id="atHe2BtnPj" onclick="selectHe2Tipo('pj')">Pessoa Jurídica</button>
+                </div>
+
+                <!-- Atendente -->
+                <div class="form-group">
+                    <label for="atHe2Atendente">Atendente</label>
+                    <select id="atHe2Atendente" name="atHe2Atendente" required>
+                        <option value="">Selecione...</option>
+                        <option value="Beatriz Ferreira">Beatriz Ferreira</option>
+                        <option value="Bianca Lacerda">Bianca Lacerda</option>
+                        <option value="Daiane Rodrigues">Daiane Rodrigues</option>
+                        <option value="Débora de Paula">Débora de Paula</option>
+                        <option value="Douglas Ribeiro">Douglas Ribeiro</option>
+                        <option value="Emily Karlin">Emily Karlin</option>
+                        <option value="Gabriel Lima">Gabriel Lima</option>
+                        <option value="Iasmim Amaral">Iasmim Amaral</option>
+                        <option value="Janaína Cícera">Janaína Cícera</option>
+                        <option value="Juliana Silva">Juliana Silva</option>
+                        <option value="Letícia Alves">Letícia Alves</option>
+                        <option value="Letícia Oliveira">Letícia Oliveira</option>
+                        <option value="Letícia Peixoto">Letícia Peixoto</option>
+                        <option value="Lorena Fonseca">Lorena Fonseca</option>
+                        <option value="Ludmila Camargos">Ludmila Camargos</option>
+                        <option value="Marcelle Chaves">Marcelle Chaves</option>
+                        <option value="Mariana Antunes">Mariana Antunes</option>
+                        <option value="Matheus Moreira">Matheus Moreira</option>
+                        <option value="Paloma Toledo">Paloma Toledo</option>
+                        <option value="Rayssa Sousa">Rayssa Sousa</option>
+                        <option value="Sophia Karen">Sophia Karen</option>
+                        <option value="Steffany Karoline">Steffany Karoline</option>
+                        <option value="Thamires Rafaela">Thamires Rafaela</option>
+                        <option value="Thiago Silva">Thiago Silva</option>
+                        <option value="Valquíria Barbosa">Valquíria Barbosa</option>
+                        <option value="Weberth Christian">Weberth Christian</option>
+                    </select>
+                </div>
+
+                <!-- ── Dados do titular SONIK ── -->
+                <p class="form-section-title">• Dados do titular SONIK •</p>
+
+                <div class="form-group">
+                    <label for="atHe2NomeSonik">Nome completo do titular SONIK</label>
+                    <input type="text" id="atHe2NomeSonik" name="atHe2NomeSonik" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atHe2CpfSonik">CPF do titular SONIK</label>
+                    <input type="text" id="atHe2CpfSonik" name="atHe2CpfSonik" placeholder="000.000.000-00" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atHe2TelefoneSonik">Telefone do titular SONIK</label>
+                    <input type="text" id="atHe2TelefoneSonik" name="atHe2TelefoneSonik" placeholder="(37) 9 9999-8888" required>
+                </div>
+
+                <!-- ── Dados do titular CEMIG ── -->
+                <p class="form-section-title">• Dados do titular CEMIG •</p>
+
+                <div class="form-group">
+                    <label for="atHe2NomeCemig">Nome completo do titular CEMIG</label>
+                    <input type="text" id="atHe2NomeCemig" name="atHe2NomeCemig" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atHe2CpfCemig">CPF do titular CEMIG</label>
+                    <input type="text" id="atHe2CpfCemig" name="atHe2CpfCemig" placeholder="000.000.000-00" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atHe2RgCemig">RG do titular CEMIG</label>
+                    <input type="text" id="atHe2RgCemig" name="atHe2RgCemig" required>
+                </div>
+
+                <!-- ── Solicitante ── -->
+                <p class="form-section-title">• Solicitante •</p>
+
+                <div class="form-group">
+                    <label for="atHe2NomeSolicitante">Nome do solicitante</label>
+                    <input type="text" id="atHe2NomeSolicitante" name="atHe2NomeSolicitante" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atHe2EmailSolicitante">E-mail do solicitante</label>
+                    <input type="email" id="atHe2EmailSolicitante" name="atHe2EmailSolicitante" required>
+                    <p class="field-hint">Para envio do termo de adesão.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="atHe2TelefoneSolicitante">Telefone do solicitante</label>
+                    <input type="text" id="atHe2TelefoneSolicitante" name="atHe2TelefoneSolicitante" placeholder="(37) 9 9999-8888" required>
+                </div>
+
+                <!-- ── Endereço ── -->
+                <p class="form-section-title">• Endereço •</p>
+
+                <div class="form-group">
+                    <label for="atHe2Cep">CEP</label>
+                    <div class="input-with-button">
+                        <input type="text" id="atHe2Cep" name="atHe2Cep" placeholder="00000-000" required>
+                        <button type="button" id="atHe2SearchCep" class="btn-search">Buscar</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="atHe2Logradouro">Logradouro</label>
+                    <input type="text" id="atHe2Logradouro" name="atHe2Logradouro" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atHe2Bairro">Bairro</label>
+                    <input type="text" id="atHe2Bairro" name="atHe2Bairro" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="atHe2Numero">Número</label>
+                        <input type="text" id="atHe2Numero" name="atHe2Numero" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="atHe2Complemento">Complemento</label>
+                        <input type="text" id="atHe2Complemento" name="atHe2Complemento">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="atHe2Cidade">Cidade</label>
+                    <input type="text" id="atHe2Cidade" name="atHe2Cidade" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atHe2UnidadeConsumidora">Número da Instalação / Unidade Consumidora</label>
+                    <input type="text" id="atHe2UnidadeConsumidora" name="atHe2UnidadeConsumidora" required>
+                </div>
+
+                <!-- Output -->
+                <div class="output-section">
+                    <span class="output-box-label">Cole o texto abaixo no atendimento</span>
+                    <div class="output-box" id="atHe2Output">
+                        <span class="output-placeholder">Preencha os campos acima para gerar o texto padronizado.</span>
+                    </div>
+                    <button type="button" class="copy-btn" id="atHe2CopyBtn" onclick="copyOutput('atHe2Output', 'atHe2CopyBtn')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Copiar
+                    </button>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <div class="logo-footer">
+                        <button type="button" id="atHe2ResetBtn" class="btn btn-primary" title="Limpar Formulário">
                             <img src="../assets/clean.svg" alt="Limpar" class="nav-icon" style="filter: brightness(0) saturate(100%) invert(100%);">
                         </button>
                         <img src="../assets/sonik.png" alt="Sonik Logo" class="logo-bottom">
