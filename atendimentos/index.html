@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atendimentos</title>
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon.png">
+    <link rel="apple-touch-icon" href="../assets/favicon.png">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        /* ── Output Box ── */
+        .output-box {
+            background: #f7fbfe;
+            border: 2px solid #d0eaf9;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-top: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13.5px;
+            line-height: 1.85;
+            color: #1a2e3b;
+            white-space: pre-wrap;
+            word-break: break-word;
+            min-height: 80px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .output-box.has-content {
+            border-color: #018dd7;
+            box-shadow: 0 0 0 3px rgba(1, 141, 215, 0.08);
+        }
+
+        .output-box-label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: Calibri, 'Calibri Light', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .output-placeholder {
+            color: #aaa;
+            font-style: italic;
+            font-family: Calibri, 'Calibri Light', sans-serif;
+            font-size: 13px;
+        }
+
+        /* ── Copy Button ── */
+        .copy-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 10px;
+            padding: 9px 20px;
+            background: linear-gradient(135deg, #018dd7 0%, #0277bd 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: Calibri, 'Calibri Light', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+            letter-spacing: 0.2px;
+        }
+
+        .copy-btn:hover {
+            background: linear-gradient(135deg, #0175b3 0%, #01639a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(1, 141, 215, 0.35);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.96);
+            box-shadow: none;
+        }
+
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+        }
+
+        .copy-btn svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+
+        /* ── Section divider ── */
+        .output-section {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 2px solid #e8f4fc;
+        }
+
+        /* ── Previsão de Mudança ── */
+        .previsao-row {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+        }
+        .previsao-row input[type="date"] {
+            flex: 1;
+        }
+        .btn-ja-mudou {
+            padding: 8px 16px;
+            background: #f5f5f5;
+            color: #018dd7;
+            border: 2px solid #018dd7;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: Calibri, 'Calibri Light', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            white-space: nowrap;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+        }
+        .btn-ja-mudou:hover {
+            background: #e3f4fc;
+            box-shadow: 0 3px 10px rgba(1, 141, 215, 0.2);
+        }
+        .btn-ja-mudou.active {
+            background: linear-gradient(135deg, #018dd7 0%, #0277bd 100%);
+            color: white;
+            border-color: #018dd7;
+        }
+        .btn-ja-mudou.active:hover {
+            background: linear-gradient(135deg, #0175b3 0%, #01639a 100%);
+        }
+        .btn-ja-mudou:active {
+            transform: scale(0.96);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <!-- Logo -->
+            <div class="logo-top-container" style="margin-bottom: 4px;">
+                <img src="../assets/atendimentos.png" alt="Atendimentos" class="logo-title" style="max-width: 260px;">
+            </div>
+
+            <!-- Tab Menu -->
+            <div class="tabs-menu">
+                <button class="tab-button active" data-page="1">
+                    <img src="../assets/router.svg" alt="Troca de Equipamento" class="tab-icon">
+                    Troca de Equipamento
+                </button>
+                <button class="tab-button" data-page="2">
+                    <img src="../assets/enderecos.svg" alt="Alteração de Endereço" class="tab-icon">
+                    Alteração de Endereço
+                </button>
+                <button class="tab-button" data-page="3">
+                    <img src="../assets/wifi.svg" alt="Mudança de Ponto Interno" class="tab-icon">
+                    Mudança de Ponto Interno
+                </button>
+                <button class="tab-button" data-page="4">
+                    <img src="../assets/mesh.svg" alt="Instalação Ponto Mesh" class="tab-icon">
+                    Instalação Ponto Mesh
+                </button>
+            </div>
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- PAGE 1: TROCA DE EQUIPAMENTO           -->
+            <!-- ══════════════════════════════════════ -->
+            <div class="form-page active" data-page="1">
+                <h2>Troca de Equipamento</h2>
+
+                <div class="form-group">
+                    <label for="atEquipAtendente">Atendente</label>
+                    <select id="atEquipAtendente" name="atEquipAtendente" required>
+                        <option value="">Selecione...</option>
+                        <option value="Beatriz Ferreira">Beatriz Ferreira</option>
+                        <option value="Bianca Lacerda">Bianca Lacerda</option>
+                        <option value="Daiane Rodrigues">Daiane Rodrigues</option>
+                        <option value="Débora de Paula">Débora de Paula</option>
+                        <option value="Douglas Ribeiro">Douglas Ribeiro</option>
+                        <option value="Emily Karlin">Emily Karlin</option>
+                        <option value="Gabriel Lima">Gabriel Lima</option>
+                        <option value="Iasmim Amaral">Iasmim Amaral</option>
+                        <option value="Janaína Cícera">Janaína Cícera</option>
+                        <option value="Juliana Silva">Juliana Silva</option>
+                        <option value="Letícia Alves">Letícia Alves</option>
+                        <option value="Letícia Oliveira">Letícia Oliveira</option>
+                        <option value="Letícia Peixoto">Letícia Peixoto</option>
+                        <option value="Lorena Fonseca">Lorena Fonseca</option>
+                        <option value="Ludmila Camargos">Ludmila Camargos</option>
+                        <option value="Marcelle Chaves">Marcelle Chaves</option>
+                        <option value="Mariana Antunes">Mariana Antunes</option>
+                        <option value="Matheus Moreira">Matheus Moreira</option>
+                        <option value="Paloma Toledo">Paloma Toledo</option>
+                        <option value="Rayssa Sousa">Rayssa Sousa</option>
+                        <option value="Sophia Karen">Sophia Karen</option>
+                        <option value="Steffany Karoline">Steffany Karoline</option>
+                        <option value="Thamires Rafaela">Thamires Rafaela</option>
+                        <option value="Thiago Silva">Thiago Silva</option>
+                        <option value="Valquíria Barbosa">Valquíria Barbosa</option>
+                        <option value="Weberth Christian">Weberth Christian</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEquipCliente">Nome do Cliente</label>
+                    <input type="text" id="atEquipCliente" name="atEquipCliente" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEquipMotivo">Motivo da Troca do Equipamento</label>
+                    <select id="atEquipMotivo" name="atEquipMotivo" required>
+                        <option value="">Selecione...</option>
+                        <option value="Renovação">Renovação</option>
+                        <option value="Retenção">Retenção</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="atEquipAtual">Equipamento Antigo</label>
+                        <select id="atEquipAtual" name="atEquipAtual" required>
+                            <option value="">Selecione...</option>
+                            <option value="Wi-Fi 5">Wi-Fi 5</option>
+                            <option value="Wi-Fi 6">Wi-Fi 6</option>
+                            <option value="Wi-Fi 7">Wi-Fi 7</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="atEquipNovo">Novo Equipamento</label>
+                        <select id="atEquipNovo" name="atEquipNovo" required>
+                            <option value="">Selecione...</option>
+                            <option value="Wi-Fi 5">Wi-Fi 5</option>
+                            <option value="Wi-Fi 6">Wi-Fi 6</option>
+                            <option value="Wi-Fi 7">Wi-Fi 7</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="atEquipTelefone">Telefone</label>
+                        <input type="text" id="atEquipTelefone" name="atEquipTelefone" placeholder="(00) 0 0000-0000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="atEquipResponsavel">Responsável</label>
+                        <input type="text" id="atEquipResponsavel" name="atEquipResponsavel" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEquipDisponibilidade">Disponibilidade</label>
+                    <select id="atEquipDisponibilidade" name="atEquipDisponibilidade" required>
+                        <option value="">Selecione...</option>
+                        <option value="Manhã">Manhã</option>
+                        <option value="Tarde">Tarde</option>
+                        <option value="Somente aos Sábados">Somente aos Sábados</option>
+                        <option value="Horário Comercial">Horário Comercial</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEquipObs">Observações</label>
+                    <textarea id="atEquipObs" name="atEquipObs" rows="3" placeholder="Opcional..."></textarea>
+                </div>
+
+                <!-- Output -->
+                <div class="output-section">
+                    <span class="output-box-label">Cole o texto abaixo no atendimento</span>
+                    <div class="output-box" id="atEquipOutput">
+                        <span class="output-placeholder">Preencha os campos acima para gerar o texto padronizado.</span>
+                    </div>
+                    <button type="button" class="copy-btn" id="atEquipCopyBtn" onclick="copyOutput('atEquipOutput', 'atEquipCopyBtn')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Copiar
+                    </button>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <div class="logo-footer">
+                        <button type="button" id="atEquipResetBtn" class="btn btn-primary" title="Limpar Formulário">
+                            <img src="../assets/clean.svg" alt="Limpar" class="nav-icon" style="filter: brightness(0) saturate(100%) invert(100%);">
+                        </button>
+                        <img src="../assets/sonik.png" alt="Sonik Logo" class="logo-bottom">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- PAGE 2: ALTERAÇÃO DE ENDEREÇO          -->
+            <!-- ══════════════════════════════════════ -->
+            <div class="form-page" data-page="2">
+                <h2>Alteração de Endereço</h2>
+
+                <div class="form-group">
+                    <label for="atEndAtendente">Atendente</label>
+                    <select id="atEndAtendente" name="atEndAtendente" required>
+                        <option value="">Selecione...</option>
+                        <option value="Beatriz Ferreira">Beatriz Ferreira</option>
+                        <option value="Bianca Lacerda">Bianca Lacerda</option>
+                        <option value="Daiane Rodrigues">Daiane Rodrigues</option>
+                        <option value="Débora de Paula">Débora de Paula</option>
+                        <option value="Douglas Ribeiro">Douglas Ribeiro</option>
+                        <option value="Emily Karlin">Emily Karlin</option>
+                        <option value="Gabriel Lima">Gabriel Lima</option>
+                        <option value="Iasmim Amaral">Iasmim Amaral</option>
+                        <option value="Janaína Cícera">Janaína Cícera</option>
+                        <option value="Juliana Silva">Juliana Silva</option>
+                        <option value="Letícia Alves">Letícia Alves</option>
+                        <option value="Letícia Oliveira">Letícia Oliveira</option>
+                        <option value="Letícia Peixoto">Letícia Peixoto</option>
+                        <option value="Lorena Fonseca">Lorena Fonseca</option>
+                        <option value="Ludmila Camargos">Ludmila Camargos</option>
+                        <option value="Marcelle Chaves">Marcelle Chaves</option>
+                        <option value="Mariana Antunes">Mariana Antunes</option>
+                        <option value="Matheus Moreira">Matheus Moreira</option>
+                        <option value="Paloma Toledo">Paloma Toledo</option>
+                        <option value="Rayssa Sousa">Rayssa Sousa</option>
+                        <option value="Sophia Karen">Sophia Karen</option>
+                        <option value="Steffany Karoline">Steffany Karoline</option>
+                        <option value="Thamires Rafaela">Thamires Rafaela</option>
+                        <option value="Thiago Silva">Thiago Silva</option>
+                        <option value="Valquíria Barbosa">Valquíria Barbosa</option>
+                        <option value="Weberth Christian">Weberth Christian</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEndCliente">Nome do Cliente</label>
+                    <input type="text" id="atEndCliente" name="atEndCliente" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEndEnderecoAntigo">Endereço Antigo</label>
+                    <input type="text" id="atEndEnderecoAntigo" name="atEndEnderecoAntigo" placeholder="Ex: AVENIDA JOVE SOARES, 993, CASA, ITAÚNA" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEndNovoCep">CEP <span style="color: red;">*</span></label>
+                    <div class="input-with-button">
+                        <input type="text" id="atEndNovoCep" name="atEndNovoCep" placeholder="00000-000" required>
+                        <button type="button" id="atSearchNovoCep" class="btn-search">Buscar</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEndLogradouro">Logradouro</label>
+                    <input type="text" id="atEndLogradouro" name="atEndLogradouro" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="atEndNumero">Número</label>
+                        <input type="text" id="atEndNumero" name="atEndNumero" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="atEndComplemento">Complemento</label>
+                        <input type="text" id="atEndComplemento" name="atEndComplemento">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEndBairro">Bairro</label>
+                    <input type="text" id="atEndBairro" name="atEndBairro" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEndCidade">Cidade</label>
+                    <input type="text" id="atEndCidade" name="atEndCidade" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="atEndTelefone">Telefone</label>
+                        <input type="text" id="atEndTelefone" name="atEndTelefone" placeholder="(00) 0 0000-0000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="atEndResponsavel">Responsável</label>
+                        <input type="text" id="atEndResponsavel" name="atEndResponsavel" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEndDisponibilidade">Disponibilidade</label>
+                    <select id="atEndDisponibilidade" name="atEndDisponibilidade" required>
+                        <option value="">Selecione...</option>
+                        <option value="Manhã">Manhã</option>
+                        <option value="Tarde">Tarde</option>
+                        <option value="Somente aos Sábados">Somente aos Sábados</option>
+                        <option value="Horário Comercial">Horário Comercial</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEndTaxa">Taxa</label>
+                    <select id="atEndTaxa" name="atEndTaxa" required>
+                        <option value="">Selecione...</option>
+                        <option value="Renovou para se isentar">Renovou para se isentar</option>
+                        <option value="1x R$100,00">1x R$100,00</option>
+                        <option value="2x R$50,00">2x R$50,00</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Previsão de Mudança</label>
+                    <div class="previsao-row">
+                        <input type="text" id="atEndPrevisaoData" name="atEndPrevisaoData" placeholder="Ex: 20/03/2026">
+                        <button type="button" id="atEndJaMudouBtn" class="btn-ja-mudou">Já se mudou</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="atEndObs">Observações</label>
+                    <textarea id="atEndObs" name="atEndObs" rows="3" placeholder="Opcional..."></textarea>
+                </div>
+
+                <!-- Output -->
+                <div class="output-section">
+                    <span class="output-box-label">Cole o texto abaixo no atendimento</span>
+                    <div class="output-box" id="atEndOutput">
+                        <span class="output-placeholder">Preencha os campos acima para gerar o texto padronizado.</span>
+                    </div>
+                    <button type="button" class="copy-btn" id="atEndCopyBtn" onclick="copyOutput('atEndOutput', 'atEndCopyBtn')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Copiar
+                    </button>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <div class="logo-footer">
+                        <button type="button" id="atEndResetBtn" class="btn btn-primary" title="Limpar Formulário">
+                            <img src="../assets/clean.svg" alt="Limpar" class="nav-icon" style="filter: brightness(0) saturate(100%) invert(100%);">
+                        </button>
+                        <img src="../assets/sonik.png" alt="Sonik Logo" class="logo-bottom">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- PAGE 3: MUDANÇA DE PONTO INTERNO       -->
+            <!-- ══════════════════════════════════════ -->
+            <div class="form-page" data-page="3">
+                <h2>Mudança de Ponto Interno</h2>
+
+                <div class="form-group">
+                    <label for="atPontoAtendente">Atendente</label>
+                    <select id="atPontoAtendente" name="atPontoAtendente" required>
+                        <option value="">Selecione...</option>
+                        <option value="Beatriz Ferreira">Beatriz Ferreira</option>
+                        <option value="Bianca Lacerda">Bianca Lacerda</option>
+                        <option value="Daiane Rodrigues">Daiane Rodrigues</option>
+                        <option value="Débora de Paula">Débora de Paula</option>
+                        <option value="Douglas Ribeiro">Douglas Ribeiro</option>
+                        <option value="Emily Karlin">Emily Karlin</option>
+                        <option value="Gabriel Lima">Gabriel Lima</option>
+                        <option value="Iasmim Amaral">Iasmim Amaral</option>
+                        <option value="Janaína Cícera">Janaína Cícera</option>
+                        <option value="Juliana Silva">Juliana Silva</option>
+                        <option value="Letícia Alves">Letícia Alves</option>
+                        <option value="Letícia Oliveira">Letícia Oliveira</option>
+                        <option value="Letícia Peixoto">Letícia Peixoto</option>
+                        <option value="Lorena Fonseca">Lorena Fonseca</option>
+                        <option value="Ludmila Camargos">Ludmila Camargos</option>
+                        <option value="Marcelle Chaves">Marcelle Chaves</option>
+                        <option value="Mariana Antunes">Mariana Antunes</option>
+                        <option value="Matheus Moreira">Matheus Moreira</option>
+                        <option value="Paloma Toledo">Paloma Toledo</option>
+                        <option value="Rayssa Sousa">Rayssa Sousa</option>
+                        <option value="Sophia Karen">Sophia Karen</option>
+                        <option value="Steffany Karoline">Steffany Karoline</option>
+                        <option value="Thamires Rafaela">Thamires Rafaela</option>
+                        <option value="Thiago Silva">Thiago Silva</option>
+                        <option value="Valquíria Barbosa">Valquíria Barbosa</option>
+                        <option value="Weberth Christian">Weberth Christian</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atPontoCliente">Nome do Cliente</label>
+                    <input type="text" id="atPontoCliente" name="atPontoCliente" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atPontoComodoAtual">Cômodo Atual do Roteador</label>
+                    <input type="text" id="atPontoComodoAtual" name="atPontoComodoAtual" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atPontoNovoPonto">Novo Cômodo</label>
+                    <input type="text" id="atPontoNovoPonto" name="atPontoNovoPonto" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="atPontoTelefone">Telefone</label>
+                        <input type="text" id="atPontoTelefone" name="atPontoTelefone" placeholder="(00) 0 0000-0000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="atPontoResponsavel">Responsável</label>
+                        <input type="text" id="atPontoResponsavel" name="atPontoResponsavel" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="atPontoDisponibilidade">Disponibilidade</label>
+                    <select id="atPontoDisponibilidade" name="atPontoDisponibilidade" required>
+                        <option value="">Selecione...</option>
+                        <option value="Manhã">Manhã</option>
+                        <option value="Tarde">Tarde</option>
+                        <option value="Somente aos Sábados">Somente aos Sábados</option>
+                        <option value="Horário Comercial">Horário Comercial</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atPontoTaxa">Taxa</label>
+                    <select id="atPontoTaxa" name="atPontoTaxa" required>
+                        <option value="">Selecione...</option>
+                        <option value="Renovou para se isentar">Renovou para se isentar</option>
+                        <option value="1x R$100,00">1x R$100,00</option>
+                        <option value="2x R$50,00">2x R$50,00</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atPontoObs">Observações</label>
+                    <textarea id="atPontoObs" name="atPontoObs" rows="3" placeholder="Opcional..."></textarea>
+                </div>
+
+                <!-- Output -->
+                <div class="output-section">
+                    <span class="output-box-label">Cole o texto abaixo no atendimento</span>
+                    <div class="output-box" id="atPontoOutput">
+                        <span class="output-placeholder">Preencha os campos acima para gerar o texto padronizado.</span>
+                    </div>
+                    <button type="button" class="copy-btn" id="atPontoCopyBtn" onclick="copyOutput('atPontoOutput', 'atPontoCopyBtn')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Copiar
+                    </button>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <div class="logo-footer">
+                        <button type="button" id="atPontoResetBtn" class="btn btn-primary" title="Limpar Formulário">
+                            <img src="../assets/clean.svg" alt="Limpar" class="nav-icon" style="filter: brightness(0) saturate(100%) invert(100%);">
+                        </button>
+                        <img src="../assets/sonik.png" alt="Sonik Logo" class="logo-bottom">
+                    </div>
+                </div>
+            </div>
+            <!-- ══════════════════════════════════════ -->
+            <!-- PAGE 4: INSTALAÇÃO PONTO MESH             -->
+            <!-- ══════════════════════════════════════ -->
+            <div class="form-page" data-page="4">
+                <h2>Instalação Ponto Mesh</h2>
+
+                <div class="form-group">
+                    <label for="atMeshAtendente">Atendente</label>
+                    <select id="atMeshAtendente" name="atMeshAtendente" required>
+                        <option value="">Selecione...</option>
+                        <option value="Beatriz Ferreira">Beatriz Ferreira</option>
+                        <option value="Bianca Lacerda">Bianca Lacerda</option>
+                        <option value="Daiane Rodrigues">Daiane Rodrigues</option>
+                        <option value="Débora de Paula">Débora de Paula</option>
+                        <option value="Douglas Ribeiro">Douglas Ribeiro</option>
+                        <option value="Emily Karlin">Emily Karlin</option>
+                        <option value="Gabriel Lima">Gabriel Lima</option>
+                        <option value="Iasmim Amaral">Iasmim Amaral</option>
+                        <option value="Janaína Cícera">Janaína Cícera</option>
+                        <option value="Juliana Silva">Juliana Silva</option>
+                        <option value="Letícia Alves">Letícia Alves</option>
+                        <option value="Letícia Oliveira">Letícia Oliveira</option>
+                        <option value="Letícia Peixoto">Letícia Peixoto</option>
+                        <option value="Lorena Fonseca">Lorena Fonseca</option>
+                        <option value="Ludmila Camargos">Ludmila Camargos</option>
+                        <option value="Marcelle Chaves">Marcelle Chaves</option>
+                        <option value="Mariana Antunes">Mariana Antunes</option>
+                        <option value="Matheus Moreira">Matheus Moreira</option>
+                        <option value="Paloma Toledo">Paloma Toledo</option>
+                        <option value="Rayssa Sousa">Rayssa Sousa</option>
+                        <option value="Sophia Karen">Sophia Karen</option>
+                        <option value="Steffany Karoline">Steffany Karoline</option>
+                        <option value="Thamires Rafaela">Thamires Rafaela</option>
+                        <option value="Thiago Silva">Thiago Silva</option>
+                        <option value="Valquíria Barbosa">Valquíria Barbosa</option>
+                        <option value="Weberth Christian">Weberth Christian</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atMeshCliente">Nome do Cliente</label>
+                    <input type="text" id="atMeshCliente" name="atMeshCliente" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atMeshMotivo">Motivo da Solicitação</label>
+                    <select id="atMeshMotivo" name="atMeshMotivo" required>
+                        <option value="">Selecione...</option>
+                        <option value="Cobertura insuficiente">Cobertura insuficiente</option>
+                        <option value="Upgrade">Upgrade</option>
+                        <option value="Retenção">Retenção</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atMeshModelo">Modelo do Equipamento</label>
+                    <select id="atMeshModelo" name="atMeshModelo" required>
+                        <option value="">Selecione...</option>
+                        <option value="Wi-Fi 5">Wi-Fi 5</option>
+                        <option value="Wi-Fi 6">Wi-Fi 6</option>
+                        <option value="Wi-Fi 7">Wi-Fi 7</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atMeshComodoRoteador">Cômodo do Roteador Principal</label>
+                    <input type="text" id="atMeshComodoRoteador" name="atMeshComodoRoteador" placeholder="Ex: Sala, Quarto, Escritório..." required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atMeshComodosMesh">Cômodo onde será instalado o ponto Mesh</label>
+                    <input type="text" id="atMeshComodosMesh" name="atMeshComodosMesh" placeholder="Ex: Quarto 1, Quarto 2, Varanda..." required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="atMeshTelefone">Telefone</label>
+                        <input type="text" id="atMeshTelefone" name="atMeshTelefone" placeholder="(00) 0 0000-0000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="atMeshResponsavel">Responsável</label>
+                        <input type="text" id="atMeshResponsavel" name="atMeshResponsavel" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="atMeshDisponibilidade">Disponibilidade</label>
+                    <select id="atMeshDisponibilidade" name="atMeshDisponibilidade" required>
+                        <option value="">Selecione...</option>
+                        <option value="Manhã">Manhã</option>
+                        <option value="Tarde">Tarde</option>
+                        <option value="Somente aos Sábados">Somente aos Sábados</option>
+                        <option value="Horário Comercial">Horário Comercial</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atMeshObs">Observações</label>
+                    <textarea id="atMeshObs" name="atMeshObs" rows="3" placeholder="Opcional..."></textarea>
+                </div>
+
+                <!-- Output -->
+                <div class="output-section">
+                    <span class="output-box-label">Cole o texto abaixo no atendimento</span>
+                    <div class="output-box" id="atMeshOutput">
+                        <span class="output-placeholder">Preencha os campos acima para gerar o texto padronizado.</span>
+                    </div>
+                    <button type="button" class="copy-btn" id="atMeshCopyBtn" onclick="copyOutput('atMeshOutput', 'atMeshCopyBtn')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Copiar
+                    </button>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <div class="logo-footer">
+                        <button type="button" id="atMeshResetBtn" class="btn btn-primary" title="Limpar Formulário">
+                            <img src="../assets/clean.svg" alt="Limpar" class="nav-icon" style="filter: brightness(0) saturate(100%) invert(100%);">
+                        </button>
+                        <img src="../assets/sonik.png" alt="Sonik Logo" class="logo-bottom">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="copyright-footer">
+            &copy; 2026 BackOffice Sonik Internet&reg;
+        </div>
+    </div>
+
+    <script src="atendimentos.js"></script>
+</body>
+</html>
