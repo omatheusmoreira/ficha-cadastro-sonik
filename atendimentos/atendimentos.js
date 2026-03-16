@@ -562,14 +562,21 @@ function initializePrevisao() {
         if (isActive) {
             dataInput.value = '';
             dataInput.disabled = true;
+            dataInput.removeAttribute('required');
         } else {
             dataInput.disabled = false;
+            dataInput.setAttribute('required', '');
         }
         renderEndOutput();
     });
 
-    dataInput.addEventListener('input', () => {
-        if (dataInput.value) {
+    dataInput.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\D/g, '').slice(0, 8);
+        if (v.length > 4)      e.target.value = `${v.slice(0,2)}/${v.slice(2,4)}/${v.slice(4)}`;
+        else if (v.length > 2) e.target.value = `${v.slice(0,2)}/${v.slice(2)}`;
+        else                   e.target.value = v;
+
+        if (e.target.value) {
             jaMudouBtn.classList.remove('active');
         }
         renderEndOutput();
