@@ -132,7 +132,7 @@ function initializeUppercaseInputs() {
         'atMeshCliente', 'atMeshComodoRoteador', 'atMeshComodosMesh', 'atMeshResponsavel',
         'atHe2NomeSonik', 'atHe2NomeCemig', 'atHe2RgCemig',
         'atHe2NomeSolicitante', 'atHe2Logradouro', 'atHe2Bairro',
-        'atHe2Numero', 'atHe2Cidade', 'atHe2UnidadeConsumidora'
+        'atHe2Numero', 'atHe2Complemento', 'atHe2Cidade', 'atHe2UnidadeConsumidora'
     ];
     ids.forEach(id => {
         const el = document.getElementById(id);
@@ -329,6 +329,7 @@ function renderEquipOutput() {
     if (!isPageAllFilled(1)) { setOutput('atEquipOutput', ''); return; }
 
     let lines = [];
+    lines.push(`** TROCA DE EQUIPAMENTO **`);
     lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
     lines.push(`** NOME DO CLIENTE: ${cliente}`);
     lines.push(`** MOTIVO DA TROCA DO EQUIPAMENTO: ${motivo.toUpperCase()}`);
@@ -358,6 +359,7 @@ function renderEndOutput() {
     const obs         = val('atEndObs');
 
     let lines = [];
+    lines.push(`** ALTERAÇÃO DE ENDEREÇO **`);
     lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
     lines.push(`** NOME DO CLIENTE: ${cliente}`);
     lines.push(`** ENDEREÇO ANTIGO: ${endAntigo}`);
@@ -387,6 +389,7 @@ function renderPontoOutput() {
     if (!isPageAllFilled(3)) { setOutput('atPontoOutput', ''); return; }
 
     let lines = [];
+    lines.push(`** MUDANÇA DE PONTO INTERNO **`);
     lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
     lines.push(`** NOME DO CLIENTE: ${cliente}`);
     lines.push(`** CÔMODO ATUAL DO ROTEADOR: ${comodoAtual}`);
@@ -416,6 +419,7 @@ function renderMeshOutput() {
     const obs         = val('atMeshObs');
 
     let lines = [];
+    lines.push(`** INSTALAÇÃO PONTO MESH **`);
     lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
     lines.push(`** NOME DO CLIENTE: ${cliente}`);
     lines.push(`** MOTIVO DA SOLICITAÇÃO: ${motivo.toUpperCase()}`);
@@ -502,6 +506,7 @@ function renderHe2Output() {
     const unidadeConsumidora= val('atHe2UnidadeConsumidora');
 
     const lines = [];
+    lines.push(`** HE² SOLAR **`);
     lines.push(`** ATENDENTE: ${atendente}`);
     lines.push(`** TIPO: ${tipo}`);
     lines.push(``);
