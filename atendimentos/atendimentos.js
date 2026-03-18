@@ -330,6 +330,7 @@ function renderEquipOutput() {
 
     let lines = [];
     lines.push(`** TROCA DE EQUIPAMENTO **`);
+    lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
     lines.push(`** NOME DO CLIENTE: ${cliente}`);
     lines.push(`** MOTIVO DA TROCA DO EQUIPAMENTO: ${motivo.toUpperCase()}`);
     lines.push(`** EQUIPAMENTO ANTIGO: ${equipAtual.toUpperCase()}`);
@@ -338,7 +339,6 @@ function renderEquipOutput() {
     lines.push(`** RESPONSÁVEL: ${responsavel}`);
     lines.push(`** DISPONIBILIDADE: ${disponib.toUpperCase()}`);
     if (obs) lines.push(`** OBS: ${obs.toUpperCase()}`);
-    lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
 
     setOutput('atEquipOutput', lines.join('\n'));
 }
@@ -360,6 +360,7 @@ function renderEndOutput() {
 
     let lines = [];
     lines.push(`** ALTERAÇÃO DE ENDEREÇO **`);
+    lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
     lines.push(`** NOME DO CLIENTE: ${cliente}`);
     lines.push(`** ENDEREÇO ANTIGO: ${endAntigo}`);
     lines.push(`** NOVO ENDEREÇO: ${endNovo}`);
@@ -369,7 +370,6 @@ function renderEndOutput() {
     lines.push(`** DISPONIBILIDADE: ${disponib.toUpperCase()}`);
     lines.push(`** TAXA: ${taxa.toUpperCase()}`);
     if (obs) lines.push(`** OBS: ${obs.toUpperCase()}`);
-    lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
 
     setOutput('atEndOutput', lines.join('\n'));
 }
@@ -390,6 +390,7 @@ function renderPontoOutput() {
 
     let lines = [];
     lines.push(`** MUDANÇA DE PONTO INTERNO **`);
+    lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
     lines.push(`** NOME DO CLIENTE: ${cliente}`);
     lines.push(`** CÔMODO ATUAL DO ROTEADOR: ${comodoAtual}`);
     lines.push(`** NOVO CÔMODO: ${novoPonto}`);
@@ -398,7 +399,6 @@ function renderPontoOutput() {
     lines.push(`** DISPONIBILIDADE: ${disponib.toUpperCase()}`);
     lines.push(`** TAXA: ${taxa.toUpperCase()}`);
     if (obs) lines.push(`** OBS: ${obs.toUpperCase()}`);
-    lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
 
     setOutput('atPontoOutput', lines.join('\n'));
 }
@@ -420,6 +420,7 @@ function renderMeshOutput() {
 
     let lines = [];
     lines.push(`** INSTALAÇÃO PONTO MESH **`);
+    lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
     lines.push(`** NOME DO CLIENTE: ${cliente}`);
     lines.push(`** MOTIVO DA SOLICITAÇÃO: ${motivo.toUpperCase()}`);
     lines.push(`** MODELO DO EQUIPAMENTO: ${modelo.toUpperCase()}`);
@@ -429,7 +430,6 @@ function renderMeshOutput() {
     lines.push(`** RESPONSÁVEL: ${responsavel}`);
     lines.push(`** DISPONIBILIDADE: ${disponib.toUpperCase()}`);
     if (obs) lines.push(`** OBS: ${obs.toUpperCase()}`);
-    lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
 
     setOutput('atMeshOutput', lines.join('\n'));
 }
@@ -486,6 +486,11 @@ async function searchCepHe2() {
 function renderHe2Output() {
     if (!isPageAllFilled(5)) { setOutput('atHe2Output', ''); return; }
 
+    const toTitleCaseHe2 = (text) => text.replace(/\S+/g, (word) => {
+        if (!word) return word;
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    });
+
     const tipo              = he2Tipo === 'pf' ? 'PESSOA FÍSICA' : 'PESSOA JURÍDICA';
     const atendente         = val('atHe2Atendente');
     const nomeSonik         = val('atHe2NomeSonik');
@@ -507,6 +512,7 @@ function renderHe2Output() {
 
     const lines = [];
     lines.push(`** HE² SOLAR **`);
+    lines.push(`** ATENDENTE: ${atendente}`);
     lines.push(`** TIPO: ${tipo}`);
     lines.push(``);
     lines.push(`** DADOS DO TITULAR SONIK`);
@@ -531,10 +537,8 @@ function renderHe2Output() {
     lines.push(`** NÚMERO: ${numero}${complemento ? ' / COMPLEMENTO: ' + complemento : ''}`);
     lines.push(`** CIDADE: ${cidade}`);
     lines.push(`** UNIDADE CONSUMIDORA: ${unidadeConsumidora}`);
-    lines.push(``);
-    lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
 
-    setOutput('atHe2Output', lines.join('\n'));
+    setOutput('atHe2Output', lines.map(toTitleCaseHe2).join('\n'));
 }
 
 // ============================================================
