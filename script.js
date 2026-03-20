@@ -83,14 +83,14 @@ const offers = {
         '2 GIGA (ALL IN: GLOBOPLAY + DISNEY+ + HBO MAX) - R$149,90 [WI-FI 7]',
         '',
         '━━━━━ OFERTAS COM 2 ROTEADORES ━━━━━',
-        '1 GIGA + DEEZER - R$129,90',
-        '1.6 GIGA + DEEZER + DISNEY+ R$139,80',
-        '1.6 GIGA + DEEZER + GLOBOPLAY - R$139,80',
-        '1.6 GIGA + DEEZER + HBO MAX - R$139,80',
-        '1 GIGA (ALL IN + REDE MESH) - R$175,80',
+        '1 GIGA + DEEZER - R$129,90 [WI-FI 6]',
+        '1.6 GIGA + DEEZER + DISNEY+ R$139,80 [WI-FI 6]',
+        '1.6 GIGA + DEEZER + GLOBOPLAY - R$139,80 [WI-FI 6]',
+        '1.6 GIGA + DEEZER + HBO MAX - R$139,80 [WI-FI 6]',
+        '1 GIGA (ALL IN + REDE MESH) - R$175,80 [WI-FI 6]',
         '',
         '━━━━━ OFERTA RURAL ━━━━━',
-        '600 MEGA - R$119,90'
+        '600 MEGA - R$119,90 [WI-FI 6]'
     ],
     pj: [
         '━━━━━ PLANOS BÁSICOS ━━━━━',
