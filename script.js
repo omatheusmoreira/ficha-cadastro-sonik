@@ -74,7 +74,7 @@ const themes = {
 const offers = {
     pf: [
         '━━━━━ OFERTAS COM 1 ROTEADOR ━━━━━',
-        '800 MEGA - R$89,90',
+        '800 MEGA - R$89,90 [WI-FI 6]',
         '1 GIGA + DEEZER - R$99,90 [WI-FI 6]' ,
         '1 GIGA + DEEZER + GLOBOPLAY - R$109,90 [WI-FI 6]',
         '1.6 GIGA + DEEZER + DISNEY+ - R$119,90 [WI-FI 7]',
