@@ -253,18 +253,6 @@ function initializeEventListeners() {
     // Force lowercase on email fields
     document.getElementById('email')?.addEventListener('input', forceEmailLowercase);
     document.getElementById('corporateEmail')?.addEventListener('input', forceEmailLowercase);
-
-    // Remove espaços em branco no início dos campos de nome
-    ['name', 'companyName'].forEach((fieldId) => {
-        const field = document.getElementById(fieldId);
-        if (!field) return;
-
-        field.addEventListener('input', removeLeadingWhitespace);
-        field.addEventListener('blur', removeLeadingWhitespace);
-        field.addEventListener('paste', () => {
-            setTimeout(() => removeLeadingWhitespace({ target: field }), 0);
-        });
-    });
     
     // Force uppercase on specific fields
     document.getElementById('name')?.addEventListener('input', forceUppercase);
