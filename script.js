@@ -256,6 +256,7 @@ function initializeEventListeners() {
     
     // Force uppercase on specific fields
     document.getElementById('name')?.addEventListener('input', forceUppercase);
+    document.getElementById('name')?.addEventListener('input', enforceNameFirstCharacter);
     document.getElementById('companyName')?.addEventListener('input', forceUppercase);
     document.getElementById('street')?.addEventListener('input', forceUppercase);
     document.getElementById('complement')?.addEventListener('input', forceUppercase);
@@ -997,6 +998,10 @@ function forceUppercase(e) {
     e.target.value = e.target.value.toUpperCase();
 }
 
+function enforceNameFirstCharacter(e) {
+    e.target.value = e.target.value.replace(/^[^\p{L}\p{N}]+/u, '');
+}
+
 // Email validation function
 function validateEmail(e) {
     const email = e.target.value.trim();
@@ -1414,9 +1419,3 @@ function resetForm() {
     // Update page display
     updatePageDisplay();
 }
-
-
-
-
-
-
