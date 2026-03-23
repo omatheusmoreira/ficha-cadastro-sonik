@@ -336,14 +336,15 @@ function renderEquipOutput() {
 
     let lines = [];
     lines.push(`** TROCA DE EQUIPAMENTO **`);
-    lines.push(`** NOME DO CLIENTE: ${cliente}`);
-    lines.push(`** MOTIVO DA TROCA DO EQUIPAMENTO: ${motivo.toUpperCase()}`);
     lines.push(`** EQUIPAMENTO ANTIGO: ${equipAtual.toUpperCase()}`);
     lines.push(`** NOVO EQUIPAMENTO: ${equipNovo.toUpperCase()}`);
     lines.push(`** TELEFONE: ${telefone}`);
     lines.push(`** RESPONSÁVEL: ${responsavel}`);
     lines.push(`** DISPONIBILIDADE: ${disponib.toUpperCase()}`);
     if (obs) lines.push(`** OBS: ${obs.toUpperCase()}`);
+    lines.push(``);
+    lines.push(`** NOME DO CLIENTE: ${cliente}`);
+    lines.push(`** MOTIVO DA TROCA DO EQUIPAMENTO: ${motivo.toUpperCase()}`);
     lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
 
     setOutput('atEquipOutput', lines.join('\n'));
@@ -367,15 +368,16 @@ function renderEndOutput() {
     let lines = [];
     lines.push(`** ALTERAÇÃO DE ENDEREÇO **`);
     lines.push(`** CLIENTE CIENTE QUE OS EQUIPAMENTOS DEVERÃO ESTAR NO NOVO ENDEREÇO. **`);
-    lines.push(`** NOME DO CLIENTE: ${cliente}`);
     lines.push(`** ENDEREÇO ANTIGO: ${endAntigo}`);
-    lines.push(`** NOVO ENDEREÇO: ${endNovo}`);
     lines.push(`** PREVISÃO DE MUDANÇA: ${previsao}`);
     lines.push(`** TELEFONE: ${telefone}`);
     lines.push(`** RESPONSÁVEL: ${responsavel}`);
     lines.push(`** DISPONIBILIDADE: ${disponib.toUpperCase()}`);
-    lines.push(`** TAXA: ${taxa.toUpperCase()}`);
     if (obs) lines.push(`** OBS: ${obs.toUpperCase()}`);
+    lines.push(``);
+    lines.push(`** NOME DO CLIENTE: ${cliente}`);
+    lines.push(`** NOVO ENDEREÇO: ${endNovo}`);
+    lines.push(`** TAXA: ${taxa.toUpperCase()}`);
     lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
 
     setOutput('atEndOutput', lines.join('\n'));
@@ -397,14 +399,15 @@ function renderPontoOutput() {
 
     let lines = [];
     lines.push(`** MUDANÇA DE PONTO INTERNO **`);
-    lines.push(`** NOME DO CLIENTE: ${cliente}`);
     lines.push(`** CÔMODO ATUAL DO ROTEADOR: ${comodoAtual}`);
     lines.push(`** NOVO CÔMODO: ${novoPonto}`);
     lines.push(`** TELEFONE: ${telefone}`);
     lines.push(`** RESPONSÁVEL: ${responsavel}`);
     lines.push(`** DISPONIBILIDADE: ${disponib.toUpperCase()}`);
-    lines.push(`** TAXA: ${taxa.toUpperCase()}`);
     if (obs) lines.push(`** OBS: ${obs.toUpperCase()}`);
+    lines.push(``);
+    lines.push(`** NOME DO CLIENTE: ${cliente}`);
+    lines.push(`** TAXA: ${taxa.toUpperCase()}`);
     lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
 
     setOutput('atPontoOutput', lines.join('\n'));
@@ -427,8 +430,6 @@ function renderMeshOutput() {
 
     let lines = [];
     lines.push(`** INSTALAÇÃO PONTO MESH **`);
-    lines.push(`** NOME DO CLIENTE: ${cliente}`);
-    lines.push(`** MOTIVO DA SOLICITAÇÃO: ${motivo.toUpperCase()}`);
     lines.push(`** MODELO DO EQUIPAMENTO: ${modelo.toUpperCase()}`);
     lines.push(`** CÔMODO DO ROTEADOR PRINCIPAL: ${comodoRot}`);
     lines.push(`** CÔMODO DO PONTO MESH: ${comodosMesh}`);
@@ -436,6 +437,9 @@ function renderMeshOutput() {
     lines.push(`** RESPONSÁVEL: ${responsavel}`);
     lines.push(`** DISPONIBILIDADE: ${disponib.toUpperCase()}`);
     if (obs) lines.push(`** OBS: ${obs.toUpperCase()}`);
+    lines.push(``);
+    lines.push(`** NOME DO CLIENTE: ${cliente}`);
+    lines.push(`** MOTIVO DA SOLICITAÇÃO: ${motivo.toUpperCase()}`);
     lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
 
     setOutput('atMeshOutput', lines.join('\n'));
@@ -455,12 +459,13 @@ function renderRemMeshOutput() {
 
     let lines = [];
     lines.push(`** REMOÇÃO PONTO MESH **`);
-    lines.push(`** NOME DO CLIENTE: ${cliente}`);
-    lines.push(`** MOTIVO DA SOLICITAÇÃO: ${motivo.toUpperCase()}`);
     lines.push(`** TELEFONE: ${telefone}`);
     lines.push(`** RESPONSÁVEL: ${responsavel}`);
     lines.push(`** DISPONIBILIDADE: ${disponib.toUpperCase()}`);
     if (obs) lines.push(`** OBS: ${obs.toUpperCase()}`);
+    lines.push(``);
+    lines.push(`** NOME DO CLIENTE: ${cliente}`);
+    lines.push(`** MOTIVO DA SOLICITAÇÃO: ${motivo.toUpperCase()}`);
     lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
 
     setOutput('atRemMeshOutput', lines.join('\n'));
