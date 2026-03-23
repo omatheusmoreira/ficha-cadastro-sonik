@@ -222,6 +222,10 @@
                     Instalação Ponto Mesh
                 </button>
                 <button class="tab-button" data-page="5">
+                    <img src="../assets/remocao.svg" alt="Remoção Ponto Mesh" class="tab-icon">
+                    Remoção Ponto Mesh
+                </button>
+                <button class="tab-button" data-page="6">
                     <img src="../assets/he2.svg" alt="HE² Solar" class="tab-icon">
                     he² Solar
                 </button>
@@ -748,10 +752,115 @@
             </div>
 
             <!-- ══════════════════════════════════════ -->
-            <!-- ══════════════════════════════════════ -->
-            <!-- PAGE 5: he² SOLAR                          -->
+            <!-- PAGE 5: REMOÇÃO PONTO MESH            -->
             <!-- ══════════════════════════════════════ -->
             <div class="form-page" data-page="5">
+                <h2>Remoção Ponto Mesh</h2>
+
+                <div class="form-group">
+                    <label for="atRemMeshAtendente">Atendente</label>
+                    <select id="atRemMeshAtendente" name="atRemMeshAtendente" required>
+                        <option value="">Selecione...</option>
+                        <option value="Beatriz Ferreira">Beatriz Ferreira</option>
+                        <option value="Bianca Lacerda">Bianca Lacerda</option>
+                        <option value="Daiane Rodrigues">Daiane Rodrigues</option>
+                        <option value="Débora de Paula">Débora de Paula</option>
+                        <option value="Douglas Ribeiro">Douglas Ribeiro</option>
+                        <option value="Emily Karlin">Emily Karlin</option>
+                        <option value="Gabriel Lima">Gabriel Lima</option>
+                        <option value="Iasmim Amaral">Iasmim Amaral</option>
+                        <option value="Janaína Cícera">Janaína Cícera</option>
+                        <option value="Juliana Silva">Juliana Silva</option>
+                        <option value="Letícia Alves">Letícia Alves</option>
+                        <option value="Letícia Oliveira">Letícia Oliveira</option>
+                        <option value="Letícia Peixoto">Letícia Peixoto</option>
+                        <option value="Lorena Fonseca">Lorena Fonseca</option>
+                        <option value="Ludmila Camargos">Ludmila Camargos</option>
+                        <option value="Marcelle Chaves">Marcelle Chaves</option>
+                        <option value="Mariana Antunes">Mariana Antunes</option>
+                        <option value="Matheus Moreira">Matheus Moreira</option>
+                        <option value="Paloma Toledo">Paloma Toledo</option>
+                        <option value="Rayssa Sousa">Rayssa Sousa</option>
+                        <option value="Sophia Karen">Sophia Karen</option>
+                        <option value="Steffany Karoline">Steffany Karoline</option>
+                        <option value="Thamires Rafaela">Thamires Rafaela</option>
+                        <option value="Valquíria Barbosa">Valquíria Barbosa</option>
+                        <option value="Weberth Christian">Weberth Christian</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atRemMeshCliente">Nome do Cliente</label>
+                    <input type="text" id="atRemMeshCliente" name="atRemMeshCliente" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="atRemMeshMotivo">Motivo da Solicitação</label>
+                    <select id="atRemMeshMotivo" name="atRemMeshMotivo" required>
+                        <option value="">Selecione...</option>
+                        <option value="Motivos Financeiros">Motivos Financeiros</option>
+                        <option value="Falta de Necessidade do Segundo Ponto">Falta de Necessidade do Segundo Ponto</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="atRemMeshTelefone">Telefone</label>
+                        <input type="text" id="atRemMeshTelefone" name="atRemMeshTelefone" placeholder="(00) 0 0000-0000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="atRemMeshResponsavel">Responsável</label>
+                        <input type="text" id="atRemMeshResponsavel" name="atRemMeshResponsavel" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="atRemMeshDisponibilidade">Disponibilidade</label>
+                    <select id="atRemMeshDisponibilidade" name="atRemMeshDisponibilidade" required>
+                        <option value="">Selecione...</option>
+                        <option value="Manhã">Manhã</option>
+                        <option value="Tarde">Tarde</option>
+                        <option value="Somente aos Sábados">Somente aos Sábados</option>
+                        <option value="Horário Comercial">Horário Comercial</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="atRemMeshObs">Observações</label>
+                    <textarea id="atRemMeshObs" name="atRemMeshObs" rows="3" placeholder="Opcional..."></textarea>
+                </div>
+
+                <!-- Output -->
+                <div class="output-section">
+                    <span class="output-box-label">Cole o texto abaixo no atendimento</span>
+                    <div class="output-box" id="atRemMeshOutput">
+                        <span class="output-placeholder">Preencha os campos acima para gerar o texto padronizado.</span>
+                    </div>
+                    <button type="button" class="copy-btn" id="atRemMeshCopyBtn" onclick="copyOutput('atRemMeshOutput', 'atRemMeshCopyBtn')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Copiar
+                    </button>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <div class="logo-footer">
+                        <button type="button" id="atRemMeshResetBtn" class="btn btn-primary" title="Limpar Formulário">
+                            <img src="../assets/clean.svg" alt="Limpar" class="nav-icon" style="filter: brightness(0) saturate(100%) invert(100%);">
+                        </button>
+                        <img src="../assets/sonik.png" alt="Sonik Logo" class="logo-bottom">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════ -->
+            <!-- ══════════════════════════════════════ -->
+            <!-- PAGE 6: he² SOLAR                          -->
+            <!-- ══════════════════════════════════════ -->
+            <div class="form-page" data-page="6">
                 <h2>he² Solar</h2>
 
                 <!-- Seletor PF / PJ -->
