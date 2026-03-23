@@ -130,6 +130,7 @@ function initializeUppercaseInputs() {
         'atEndNumero', 'atEndComplemento', 'atEndBairro', 'atEndCidade', 'atEndResponsavel',
         'atPontoCliente', 'atPontoComodoAtual', 'atPontoNovoPonto', 'atPontoResponsavel',
         'atMeshCliente', 'atMeshComodoRoteador', 'atMeshComodosMesh', 'atMeshResponsavel',
+        'atRemMeshCliente', 'atRemMeshResponsavel',
         'atHe2NomeSonik', 'atHe2NomeCemig', 'atHe2RgCemig',
         'atHe2NomeSolicitante', 'atHe2Logradouro', 'atHe2Bairro',
         'atHe2Numero', 'atHe2Complemento', 'atHe2Cidade', 'atHe2UnidadeConsumidora'
@@ -144,7 +145,7 @@ function initializeUppercaseInputs() {
 // PHONE MASK
 // ============================================================
 function initializePhoneMask() {
-    ['atEquipTelefone', 'atEndTelefone', 'atPontoTelefone', 'atMeshTelefone',
+    ['atEquipTelefone', 'atEndTelefone', 'atPontoTelefone', 'atMeshTelefone', 'atRemMeshTelefone',
      'atHe2TelefoneSonik', 'atHe2TelefoneSolicitante'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', limitPhoneInput);
@@ -217,7 +218,8 @@ function initializeFormButtons() {
     document.getElementById('atEndResetBtn')?.addEventListener('click',  () => resetPage(2));
     document.getElementById('atPontoResetBtn')?.addEventListener('click', () => resetPage(3));
     document.getElementById('atMeshResetBtn')?.addEventListener('click',  () => resetPage(4));
-    document.getElementById('atHe2ResetBtn')?.addEventListener('click',   () => resetPage(5));
+    document.getElementById('atRemMeshResetBtn')?.addEventListener('click', () => resetPage(5));
+    document.getElementById('atHe2ResetBtn')?.addEventListener('click',   () => resetPage(6));
 
     // CEP HE²
     const he2CepBtn   = document.getElementById('atHe2SearchCep');
@@ -255,6 +257,9 @@ function initializeLiveOutput() {
                    'atMeshComodoRoteador','atMeshComodosMesh','atMeshTelefone','atMeshResponsavel',
                    'atMeshDisponibilidade','atMeshObs'];
 
+    const remMesh = ['atRemMeshAtendente','atRemMeshCliente','atRemMeshMotivo',
+                     'atRemMeshTelefone','atRemMeshResponsavel','atRemMeshDisponibilidade','atRemMeshObs'];
+
     const he2 = ['atHe2Atendente',
                   'atHe2NomeSonik','atHe2CpfSonik','atHe2TelefoneSonik',
                   'atHe2NomeCemig','atHe2CpfCemig','atHe2RgCemig',
@@ -266,6 +271,7 @@ function initializeLiveOutput() {
     watchFields(end, renderEndOutput);
     watchFields(ponto, renderPontoOutput);
     watchFields(mesh, renderMeshOutput);
+    watchFields(remMesh, renderRemMeshOutput);
     watchFields(he2, renderHe2Output);
 }
 
@@ -435,7 +441,32 @@ function renderMeshOutput() {
     setOutput('atMeshOutput', lines.join('\n'));
 }
 
-// PAGE 5 — HE² SOLAR
+// PAGE 5 — REMOÇÃO PONTO MESH
+function renderRemMeshOutput() {
+    if (!isPageAllFilled(5)) { setOutput('atRemMeshOutput', ''); return; }
+
+    const atendente   = selText('atRemMeshAtendente');
+    const cliente     = val('atRemMeshCliente');
+    const motivo      = selText('atRemMeshMotivo');
+    const telefone    = val('atRemMeshTelefone');
+    const responsavel = val('atRemMeshResponsavel');
+    const disponib    = selText('atRemMeshDisponibilidade');
+    const obs         = val('atRemMeshObs');
+
+    let lines = [];
+    lines.push(`** REMOÇÃO PONTO MESH **`);
+    lines.push(`** NOME DO CLIENTE: ${cliente}`);
+    lines.push(`** MOTIVO DA SOLICITAÇÃO: ${motivo.toUpperCase()}`);
+    lines.push(`** TELEFONE: ${telefone}`);
+    lines.push(`** RESPONSÁVEL: ${responsavel}`);
+    lines.push(`** DISPONIBILIDADE: ${disponib.toUpperCase()}`);
+    if (obs) lines.push(`** OBS: ${obs.toUpperCase()}`);
+    lines.push(`** ATENDENTE: ${atendente.toUpperCase()}`);
+
+    setOutput('atRemMeshOutput', lines.join('\n'));
+}
+
+// PAGE 6 — HE² SOLAR
 let he2Tipo = 'pf'; // 'pf' ou 'pj'
 
 function selectHe2Tipo(tipo) {
@@ -485,7 +516,7 @@ async function searchCepHe2() {
 }
 
 function renderHe2Output() {
-    if (!isPageAllFilled(5)) { setOutput('atHe2Output', ''); return; }
+    if (!isPageAllFilled(6)) { setOutput('atHe2Output', ''); return; }
 
     const toTitleCaseHe2 = (text) => text.replace(/\S+/g, (word) => {
         if (!word) return word;
@@ -676,11 +707,11 @@ function resetPage(pageNum) {
     }
 
     // Limpa output da página
-    const outputMap = { 1: 'atEquipOutput', 2: 'atEndOutput', 3: 'atPontoOutput', 4: 'atMeshOutput', 5: 'atHe2Output' };
+    const outputMap = { 1: 'atEquipOutput', 2: 'atEndOutput', 3: 'atPontoOutput', 4: 'atMeshOutput', 5: 'atRemMeshOutput', 6: 'atHe2Output' };
     setOutput(outputMap[pageNum], '');
 
-    // Reset HE² tipo (page 5)
-    if (pageNum === 5) selectHe2Tipo('pf');
+    // Reset HE² tipo (page 6)
+    if (pageNum === 6) selectHe2Tipo('pf');
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
