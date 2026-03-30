@@ -95,7 +95,7 @@ const offers = {
     pj: [
         '━━━━━ PLANOS BÁSICOS ━━━━━',
         '1 GIGA + WI-FI – R$119,90 [WI-FI 6]',
-        '1 GIGA + WI-FI + IP FIXO – R$149,90 [WI-FI 6]',
+        '1 GIGA + WI-FI + IP FIXO – R$189,80 [WI-FI 6]',
         '600 MEGA + WI-FI + FIXO NACIONAL ILIMITADO + DRIVE 500GB – R$159,90',
         '',
         '━━━━━ PLANOS COM TELEFONIA EMPRESARIAL ━━━━━',
