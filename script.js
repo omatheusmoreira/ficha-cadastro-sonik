@@ -121,7 +121,7 @@ const offers = {
 // Função para upload de arquivos no Google Drive via Apps Script
 // =============================
 // Cole a URL do seu Apps Script Web App abaixo:
-const APPS_SCRIPT_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbzsBsCPhbq7OLlaEAt8PG6rxIuHSoNlXTtjlwmhAK7rYJP9Ylit9fbMbGgYnd4kDUk/exec';
+const APPS_SCRIPT_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbz60zunhfMzZAeWmMVeE9ILh9_W8fKkZBpoS9zV7XYSsQJ9uz2-M5wtuGtgmbA5XfHt/exec';
 
 /**
  * Envia todos os arquivos do formulário para o Google Drive via Apps Script, incluindo o PDF da ficha
