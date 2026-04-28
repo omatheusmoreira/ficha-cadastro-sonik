@@ -18,23 +18,37 @@ async function uploadFiles(payload) {
     } else {
         // Modo produção (GitHub Pages)
         console.log("🌐 MODO PRODUÇÃO (upload real)");
-        try {
-            const response = await fetch(APPS_SCRIPT_UPLOAD_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain" },
-                body: JSON.stringify(payload)
-            });
-            const result = await response.json();
-            if (result.status === "success") {
-                console.log("Arquivos enviados para o Drive com sucesso:", result.folderUrl);
-                return result;
-            } else {
-                console.error("Erro ao enviar arquivos para o Drive:", result.message);
-                return result;
+        const MAX_RETRIES = 4;
+        const RETRY_DELAY_MS = 3000;
+        for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                if (attempt > 1) {
+                    console.log(`Tentativa ${attempt} de ${MAX_RETRIES} para upload no Drive...`);
+                    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS * (attempt - 1)));
+                }
+                const response = await fetch(APPS_SCRIPT_UPLOAD_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.status === "success") {
+                    console.log("Arquivos enviados para o Drive com sucesso:", result.folderUrl);
+                    return result;
+                } else {
+                    console.warn(`Tentativa ${attempt} falhou: ${result.message}`);
+                    if (attempt === MAX_RETRIES) {
+                        console.error("Erro ao enviar arquivos para o Drive após todas as tentativas:", result.message);
+                        return result;
+                    }
+                }
+            } catch (error) {
+                console.warn(`Tentativa ${attempt} falhou com exceção:`, error);
+                if (attempt === MAX_RETRIES) {
+                    console.error("Erro na integração com o Google Drive:", error);
+                    return { status: "error", message: error.toString() };
+                }
             }
-        } catch (error) {
-            console.error("Erro na integração com o Google Drive:", error);
-            return { status: "error", message: error.toString() };
         }
     }
 }
@@ -77,8 +91,8 @@ const offers = {
         'COMBO 2026-WIFI6-800MEGA-SKEELO - R$ 89,90',
         'COMBO 2026-WIFI6-1GIGA-SKEELO+DEEZER - R$ 99,90' ,
         'COMBO 2026-WIFI6-1GIGA-SKEELO+DEEZER+GLOBOPLAY - R$ 109,90',
-        'COMBO 2026-WIFI6-1GIGA-SKEELO+DEEZER+DISNEY - R$ 119,90',
-        'COMBO 2026-WIFI6-1GIGA-SKEELO+DEEZER+HBOMAX - R$ 119,90',
+        'COMBO 2026-WIFI7-1.6GIGA-SKEELO+DEEZER+DISNEY - R$ 119,90',
+        'COMBO 2026-WIFI7-1.6GIGA-SKEELO+DEEZER+HBOMAX - R$ 119,90',
         'COMBO 2026-WIFI6-1GIGA-SKEELO+DEEZER+IPFIXO - R$ 149,90',
         'COMBO 2026-WIFI7-ALL IN-2GIGA-SKEELO+DEEZER+GLOBOPLAY+HBOMAX+DISNEY - R$ 149,90',
         '',
