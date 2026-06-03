@@ -115,7 +115,7 @@ const offers = {
         '600 MEGA + WI-FI + FIXO NACIONAL ILIMITADO + DRIVE 500GB – R$159,90',
         '',
         '━━━━━ PLANOS COM TELEFONIA EMPRESARIAL ━━━━━',
-        'FXS 2 CANAIS + 600 MEGA + IP FIXO + WI-FI (MÁX. 2 NÚMEROS) – R$299,90',
+        'FXS 2 CANAIS + 600 MEGA + IP FIXO + WI-FI (MÁX. 2 NÚMEROS) – R$249,90',
         'NACIONAL 4 CANAIS + 600 MEGA + IP FIXO + WI-FI (MÁX. 4 NÚMEROS) – R$399,90',
         'SIP 5 CANAIS + 600 MEGA + IP FIXO + WI-FI (MÁX. 5 NÚMEROS) – R$499,90',
         'SIP 10 CANAIS + 600 MEGA + IP FIXO (MÁX. 50 NÚMEROS) – R$799,90',
